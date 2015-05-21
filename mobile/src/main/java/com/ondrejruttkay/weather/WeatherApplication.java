@@ -3,9 +3,14 @@ package com.ondrejruttkay.weather;
 import android.app.Application;
 import android.content.Context;
 
+import com.ondrejruttkay.weather.geolocation.Geolocation;
+import com.squareup.otto.Bus;
+
 
 public class WeatherApplication extends Application {
     private static WeatherApplication mInstance;
+    private static Bus mEventBus;
+    private static Geolocation mGeolocation;
 
 
     public WeatherApplication() {
@@ -16,6 +21,9 @@ public class WeatherApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mEventBus = new Bus();
+        mGeolocation = new Geolocation();
 
         // force AsyncTask to be initialized in the main thread due to the bug:
         // http://stackoverflow.com/questions/4280330/onpostexecute-not-being-called-in-asynctask-handler-runtime-exception
@@ -29,5 +37,15 @@ public class WeatherApplication extends Application {
 
     public static Context getContext() {
         return mInstance;
+    }
+
+
+    public static Bus getEventBus() {
+        return mEventBus;
+    }
+
+
+    public static Geolocation getGeolocation() {
+        return mGeolocation;
     }
 }

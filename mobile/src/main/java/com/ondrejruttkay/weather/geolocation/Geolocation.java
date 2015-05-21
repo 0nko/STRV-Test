@@ -1,19 +1,15 @@
 package com.ondrejruttkay.weather.geolocation;
 
-import android.app.Service;
 import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.ondrejruttkay.weather.WeatherApplication;
-import com.ondrejruttkay.weather.activity.ExampleActivity;
+import com.ondrejruttkay.weather.activity.MainActivity;
 import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.PlayServices;
 
@@ -29,6 +25,8 @@ public class Geolocation implements LocationListener,
     public Geolocation() {
         mLocationRequest = LocationRequest.create();
         mGoogleApiClient = new GoogleApiClient.Builder(WeatherApplication.getContext()).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
+
+        WeatherApplication.getEventBus().register(this);
     }
 
     public void requestFreshLocation() {
@@ -58,7 +56,7 @@ public class Geolocation implements LocationListener,
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Logcat.d("onConnectionFailed: " + connectionResult.getErrorCode());
-        PlayServices.tryResolveError(connectionResult, mGoogleApiClient, ExampleActivity.class);
+        PlayServices.tryResolveError(connectionResult, mGoogleApiClient, MainActivity.class);
     }
 
 

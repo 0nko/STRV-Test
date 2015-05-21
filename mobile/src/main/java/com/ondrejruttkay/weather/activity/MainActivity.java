@@ -14,14 +14,14 @@ import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.PlayServices;
 
 
-public class ExampleActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
     private boolean mPreferencesChanged = false;
     private boolean mShowPlayServicesError = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_example);
+        setContentView(R.layout.activity_main);
 
         // register listener
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);

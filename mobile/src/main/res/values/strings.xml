@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- LANGUAGE INDEPENDENT -->
+	<string name="app_name">Weather</string>
+	<string name="app_store_uri">https://play.google.com/store/apps/details?id=com.ondrejruttkay.weather</string>
+
+	<!-- LANGUAGE DEPENDENT -->
+	<string name="global_offline_toast">No Internet connection available</string>
+	<string name="global_apicall_fail_toast">Wooops! Communication with server failed</string>
+	<string name="global_apicall_unknown_host_toast">Wooops! Cannot establish a connection to the server</string>
+	<string name="global_apicall_not_found_toast">Wooops! Resource not found</string>
+	<string name="global_apicall_timeout_toast">Wooops! Connection timed out</string>
+	<string name="global_apicall_parse_fail_toast">Wooops! Unable to process response from server</string>
+
+	<string name="title_example">Example title</string>
+
+	<string name="menu_example">Example menu</string>
+
+	<string name="placeholder_empty">No data</string>
+	<string name="placeholder_offline">No network</string>
+
+	<string name="fragment_example_title">Example fragment title</string>
+
+	<string name="dialog_example_title">Example dialog title</string>
+
+	<string name="notification_example_title">Example notification title</string>
+	<string name="dialog_play_services_no_resolution">Google Play services: Unable to resolve connection error.</string>
+</resources>

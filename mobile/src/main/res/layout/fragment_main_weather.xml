@@ -5,16 +5,23 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <ScrollView
-        android:id="@+id/container_content"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:background="@color/global_bg_front">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/fragment_main_weather_content" />
+        <ScrollView
+            android:id="@+id/container_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:background="@color/global_bg_front">
 
-    </ScrollView>
+            <include layout="@layout/fragment_main_weather_content" />
+
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <include
         layout="@layout/placeholder_progress"

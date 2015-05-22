@@ -5,16 +5,8 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <ScrollView
-        android:id="@+id/container_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:background="@color/global_bg_front">
 
-        <include layout="@layout/fragment_main_forecast_content" />
-
-    </ScrollView>
+    <include layout="@layout/fragment_main_forecast_content" />
 
     <include
         layout="@layout/placeholder_progress"

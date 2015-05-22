@@ -2,6 +2,7 @@ package com.ondrejruttkay.weather.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,7 @@ public class WeatherFragment extends TaskFragment implements OnLoadDataListener 
     private ViewState mViewState = null;
     private View mRootView;
     private LoadDataTask mLoadDataTask;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public void onAttach(Activity activity) {
@@ -40,6 +42,11 @@ public class WeatherFragment extends TaskFragment implements OnLoadDataListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_main_weather, container, false);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_accent);
+
+        showContent();
         return mRootView;
     }
 

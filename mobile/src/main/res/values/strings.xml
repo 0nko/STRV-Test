@@ -27,4 +27,7 @@
 	<string name="dialog_play_services_no_resolution">Google Play services: Unable to resolve connection error.</string>
 	<string name="drawer_menu_today">Today</string>
 	<string name="drawer_menu_forecast">Forecast</string>
+
+	<string name="drawer_open">Open navigation drawer</string>
+	<string name="drawer_close">Close navigation drawer</string>
 </resources>

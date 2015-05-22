@@ -25,4 +25,6 @@
 
 	<string name="notification_example_title">Example notification title</string>
 	<string name="dialog_play_services_no_resolution">Google Play services: Unable to resolve connection error.</string>
+	<string name="drawer_menu_today">Today</string>
+	<string name="drawer_menu_forecast">Forecast</string>
 </resources>

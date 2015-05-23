@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.ondrejruttkay.weather.R;
 import com.ondrejruttkay.weather.listener.OnLoadDataListener;
@@ -18,7 +17,7 @@ import com.ondrejruttkay.weather.utility.NetworkManager;
 import com.ondrejruttkay.weather.view.ViewState;
 
 
-public class WeatherFragment extends TaskFragment implements OnLoadDataListener {
+public class ForecastFragment extends TaskFragment implements OnLoadDataListener {
     private ViewState mViewState = null;
     private View mRootView;
     private LoadDataTask mLoadDataTask;
@@ -41,7 +40,7 @@ public class WeatherFragment extends TaskFragment implements OnLoadDataListener 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_main_weather, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_main_forecast, container, false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_accent);
@@ -78,7 +77,8 @@ public class WeatherFragment extends TaskFragment implements OnLoadDataListener 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R.string.title_today);
+
+        getActivity().setTitle(R.string.title_forecast);
     }
 
 

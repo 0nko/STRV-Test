@@ -20,35 +20,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/global_text_primary"
-                android:text="Test test" />
+                android:text="Forecast" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/global_text_primary"
-                android:text="Test test" />
+                android:text="Forecast" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/global_text_primary"
-                android:text="Test test" />
+                android:text="Forecast" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/global_text_primary"
-                android:text="Test test" />
+                android:text="Forecast" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/global_text_primary"
-                android:text="Test test" />
+                android:text="Forecast" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/global_text_primary"
-                android:text="Test test" />
+                android:text="Forecast" />
         </LinearLayout>
     </ScrollView>
 

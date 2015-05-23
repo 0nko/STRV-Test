@@ -3,7 +3,10 @@
           android:id="@+id/menuItem"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:textSize="@dimen/global_text_size_title"
-          android:padding="@dimen/global_spacing_s"
+          android:textSize="@dimen/global_text_size_drawer_list"
+          android:paddingLeft="@dimen/global_spacing_xs"
+          android:paddingRight="@dimen/global_spacing_xs"
+          android:paddingTop="@dimen/global_spacing_xs"
+          android:paddingBottom="@dimen/global_spacing_xs"
           android:textColor="@color/drawer_list_selector"
-          android:drawablePadding="@dimen/global_spacing_xs" />
+          android:drawablePadding="@dimen/global_spacing_s" />

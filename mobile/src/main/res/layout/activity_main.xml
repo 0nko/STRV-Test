@@ -28,14 +28,27 @@
 
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/left_drawer"
+        <LinearLayout
+            android:id="@+id/drawerLinearLayout"
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@color/global_bg_front"
-            android:choiceMode="singleChoice"
-            android:dividerHeight="0dp"/>
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/left_drawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:choiceMode="singleChoice"
+                android:divider="@null"
+                android:dividerHeight="0dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/global_line"/>
+        </LinearLayout>
 
     </com.ondrejruttkay.weather.view.FragmentNavigationDrawer>
 

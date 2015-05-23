@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 public class FragmentNavigationDrawer extends DrawerLayout {
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
+    private LinearLayout mDrawerLinearLayout;
     private Toolbar mToolbar;
     private int drawerContainerRes;
 
@@ -53,10 +55,12 @@ public class FragmentNavigationDrawer extends DrawerLayout {
     }
 
 
-    public void setupDrawerConfiguration(ListView drawerListView, Toolbar drawerToolbar, int drawerContainerResId) {
+    public void setupDrawerConfiguration(ListView drawerListView, Toolbar drawerToolbar, LinearLayout drawerLinearLayout, int drawerContainerResId) {
         // Setup navigation items array
         mDrawerNavigationItems = new ArrayList<>();
         mDrawerItems = new ArrayList<>();
+        mDrawerLinearLayout = drawerLinearLayout;
+
         drawerContainerRes = drawerContainerResId;
         // Setup drawer list view
         mDrawerList = drawerListView;
@@ -110,7 +114,11 @@ public class FragmentNavigationDrawer extends DrawerLayout {
         // Highlight the selected item, update the mTitle, and close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(navItem.getTitle());
-        closeDrawer(mDrawerList);
+        closeDrawer(mDrawerLinearLayout);
+    }
+
+    public void syncState() {
+        mDrawerToggle.syncState();
     }
 
 

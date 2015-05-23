@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="global_color_primary">#ffbdbdbd</color>
-	<color name="global_color_primary_dark">#ff757575</color>
+	<color name="global_color_primary">#FF7FA5E3</color>
+	<color name="global_color_primary_dark">#FF6684B6</color>
 	<color name="global_color_accent">#ff009688</color>
 	<color name="global_color_control_normal">#8a000000</color>
 	<color name="global_color_control_activated">#ff009688</color>
@@ -19,6 +19,7 @@
 	<color name="global_text_hint_inverse">#80ffffff</color>
 	<color name="global_text_highlight">#66009688</color>
 	<color name="global_text_link">#009688</color>
+	<color name="global_line">#E5E5E5</color>
 
 	<color name="global_bg_back">#ffeeeeee</color>
 	<color name="global_bg_back_inverse">#ff303030</color>

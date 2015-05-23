@@ -6,26 +6,22 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.BaseAdapter;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.ondrejruttkay.weather.R;
 import com.ondrejruttkay.weather.WeatherConfig;
-import com.ondrejruttkay.weather.adapter.DrawerListAdapter;
-import com.ondrejruttkay.weather.entity.DrawerListItem;
+import com.ondrejruttkay.weather.fragment.AlertDialogFragment;
+import com.ondrejruttkay.weather.fragment.ForecastFragment;
 import com.ondrejruttkay.weather.fragment.WeatherFragment;
 import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.PlayServices;
 import com.ondrejruttkay.weather.view.FragmentNavigationDrawer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
@@ -40,17 +36,18 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
         mDrawerLayout = (FragmentNavigationDrawer)findViewById(R.id.navigation_drawer);
+
+        LinearLayout mDrawerLinearLayout = (LinearLayout)findViewById(R.id.drawerLinearLayout);
 
         setSupportActionBar(mToolbar);
 
         // Setup drawer view
-        mDrawerLayout.setupDrawerConfiguration((ListView) findViewById(R.id.left_drawer), mToolbar, R.id.content_frame);
+        mDrawerLayout.setupDrawerConfiguration((ListView) findViewById(R.id.left_drawer), mToolbar, mDrawerLinearLayout, R.id.content_frame);
         // Add nav items
-        mDrawerLayout.addNavItem(getString(R.string.drawer_menu_today), R.drawable.ic_drawer_today_dark, getString(R.string.drawer_menu_today), WeatherFragment.class);
-        mDrawerLayout.addNavItem(getString(R.string.drawer_menu_forecast), R.drawable.ic_drawer_forecast_dark, getString(R.string.drawer_menu_forecast), WeatherFragment.class);
+        mDrawerLayout.addNavItem(getString(R.string.title_today), R.drawable.ic_drawer_today_dark, getString(R.string.title_today), WeatherFragment.class);
+        mDrawerLayout.addNavItem(getString(R.string.title_forecast), R.drawable.ic_drawer_forecast_dark, getString(R.string.title_forecast), ForecastFragment.class);
         // Select default
         if (savedInstanceState == null) {
             mDrawerLayout.selectDrawerItem(0);
@@ -101,6 +98,13 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         }
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerLayout.syncState();
+    }
+
     /*
          * Handle results returned to this Activity by other Activities started with
          * startActivityForResult(). In particular, the method onConnectionFailed() in
@@ -137,5 +141,38 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 //                Logcat.d(getString(R.string.unknown_activity_request_code, requestCode));
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                startSettingsActivity();
+                break;
+            case R.id.menu_about:
+                showAboutDialog();
+                break;
+        }
+        return true;
+    }
+
+
+    private void showAboutDialog() {
+        AlertDialogFragment aboutDialog = AlertDialogFragment.newInstance(R.string.title_about, R.string.about_message);
+        aboutDialog.show(getSupportFragmentManager(), "dialog");
+    }
+
+
+    private void startSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

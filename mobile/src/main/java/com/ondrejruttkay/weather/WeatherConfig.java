@@ -5,8 +5,9 @@ public class WeatherConfig {
     public static final boolean LOGS = BuildConfig.LOGS;
     public static final boolean DEV_API = BuildConfig.DEV_API;
 
-    public static final String API_ENDPOINT_PRODUCTION = "http://example.com/api/";
-    public static final String API_ENDPOINT_DEVELOPMENT = "http://dev.example.com/api/";
+    public static final String API_ENDPOINT_PRODUCTION = "http://api.openweathermap.org/";
+    public static final String API_ENDPOINT_DEVELOPMENT = "http://api.openweathermap.org/";
+    public static final String API_KEY = "63d03d4b0e37a033b9e66906efbb9334";
 
     public static String SHOW_PLAY_SERVICES_ERROR_ACTION = "com.ondrejruttkay.weather.SHOW_PLAY_SERVICES_ERROR_ACTION";
 

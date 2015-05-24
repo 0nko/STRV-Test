@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.ondrejruttkay.weather.R;
 import com.ondrejruttkay.weather.WeatherConfig;
 import com.ondrejruttkay.weather.fragment.AlertDialogFragment;
 import com.ondrejruttkay.weather.fragment.ForecastFragment;
@@ -22,6 +21,7 @@ import com.ondrejruttkay.weather.fragment.WeatherFragment;
 import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.PlayServices;
 import com.ondrejruttkay.weather.view.FragmentNavigationDrawer;
+import com.ondrejruttkay.weather.R;
 
 
 public class MainActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {

@@ -5,7 +5,6 @@ package com.ondrejruttkay.weather.view;
  */
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.ondrejruttkay.weather.R;
 import com.ondrejruttkay.weather.adapter.DrawerListAdapter;

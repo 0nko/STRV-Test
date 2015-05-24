@@ -1,5 +1,6 @@
 package com.ondrejruttkay.weather.client.request;
 
+import com.ondrejruttkay.weather.client.response.ForecastResponse;
 import com.ondrejruttkay.weather.client.response.WeatherResponse;
 
 import retrofit.Callback;
@@ -23,5 +24,5 @@ public interface WeatherApiRequest {
                      @Query("units") String units,
                      @Query("cnt") int days,
                      @Query("APPID") String apiKey,
-                     Callback<WeatherResponse> callback);
+                     Callback<ForecastResponse> callback);
 }

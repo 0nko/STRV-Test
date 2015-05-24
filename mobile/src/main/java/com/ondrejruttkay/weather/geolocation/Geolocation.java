@@ -10,6 +10,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.ondrejruttkay.weather.WeatherApplication;
 import com.ondrejruttkay.weather.activity.MainActivity;
+import com.ondrejruttkay.weather.entity.event.LocationFoundEvent;
 import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.PlayServices;
 
@@ -25,8 +26,6 @@ public class Geolocation implements LocationListener,
     public Geolocation() {
         mLocationRequest = LocationRequest.create();
         mGoogleApiClient = new GoogleApiClient.Builder(WeatherApplication.getContext()).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
-
-        WeatherApplication.getEventBus().register(this);
     }
 
     public void requestFreshLocation() {
@@ -67,6 +66,6 @@ public class Geolocation implements LocationListener,
         // return location
         stop();
 
-//        listener.onGeolocationRespond(Geolocation.this, mCurrentLocation);
+        WeatherApplication.getEventBus().post(new LocationFoundEvent(location));
     }
 }

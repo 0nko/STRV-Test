@@ -5,7 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.ondrejruttkay.weather.WeatherApplication;
 import com.ondrejruttkay.weather.WeatherConfig;
 import com.ondrejruttkay.weather.client.request.WeatherApiRequest;
+import com.ondrejruttkay.weather.client.response.ForecastResponse;
 import com.ondrejruttkay.weather.client.response.WeatherResponse;
+import com.ondrejruttkay.weather.entity.event.ForecastError;
+import com.ondrejruttkay.weather.entity.event.ForecastReceivedEvent;
+import com.ondrejruttkay.weather.entity.event.WeatherError;
+import com.ondrejruttkay.weather.entity.event.WeatherReceivedEvent;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -32,29 +37,29 @@ public class OpenWeatherMapClient {
                 .build();
 
         weatherApi = restAdapter.create(WeatherApiRequest.class);
-
-        WeatherApplication.getEventBus().register(this);
     }
 
     Callback<WeatherResponse> weatherCallback = new Callback<WeatherResponse>() {
         @Override
-        public void success(WeatherResponse elevationResponse, Response response) {
+        public void success(WeatherResponse weatherResponse, Response response) {
+            WeatherApplication.getEventBus().post(new WeatherReceivedEvent(weatherResponse));
         }
 
         @Override
         public void failure(RetrofitError retrofitError) {
-//            OnkoCycleApp.Bus.post(new ElevationError(retrofitError.getMessage(), retrofitError.isNetworkError()));
+            WeatherApplication.getEventBus().post(new WeatherError(retrofitError.getMessage(), retrofitError.isNetworkError()));
         }
     };
 
-    Callback<WeatherResponse> forecastCallback = new Callback<WeatherResponse>() {
+    Callback<ForecastResponse> forecastCallback = new Callback<ForecastResponse>() {
         @Override
-        public void success(WeatherResponse elevationResponse, Response response) {
+        public void success(ForecastResponse forecastResponse, Response response) {
+            WeatherApplication.getEventBus().post(new ForecastReceivedEvent(forecastResponse));
         }
 
         @Override
         public void failure(RetrofitError retrofitError) {
-//            OnkoCycleApp.Bus.post(new ElevationError(retrofitError.getMessage(), retrofitError.isNetworkError()));
+            WeatherApplication.getEventBus().post(new ForecastError(retrofitError.getMessage(), retrofitError.isNetworkError()));
         }
     };
 

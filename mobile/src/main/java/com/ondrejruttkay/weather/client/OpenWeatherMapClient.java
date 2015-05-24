@@ -23,8 +23,8 @@ import retrofit.converter.GsonConverter;
  */
 public class OpenWeatherMapClient {
 
-    private static final String units = "metric";
-    private static final int forecastDays = 5;
+    private static final String UNITS = "metric";
+    private static final int FORECAST_DAYS = 5;
     private WeatherApiRequest weatherApi;
 
     public OpenWeatherMapClient() {
@@ -64,10 +64,10 @@ public class OpenWeatherMapClient {
     };
 
     public void requestCurrentWeather(String latitude, String longitude) {
-        weatherApi.getCurrentWeather(latitude, longitude, units, WeatherConfig.API_KEY, weatherCallback);
+        weatherApi.getCurrentWeather(latitude, longitude, UNITS, WeatherConfig.API_KEY, weatherCallback);
     }
 
     public void requestForecast(String latitude, String longitude) {
-        weatherApi.getForecast(latitude, longitude, units, forecastDays, WeatherConfig.API_KEY, forecastCallback);
+        weatherApi.getForecast(latitude, longitude, UNITS, FORECAST_DAYS, WeatherConfig.API_KEY, forecastCallback);
     }
 }

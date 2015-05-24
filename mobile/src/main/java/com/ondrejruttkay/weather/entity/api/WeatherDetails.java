@@ -5,8 +5,14 @@ package com.ondrejruttkay.weather.entity.api;
  */
 public class WeatherDetails {
     private double pressure;
+    private int humidity;
 
     public double getPressure() {
         return pressure;
+    }
+
+
+    public int getHumidity() {
+        return humidity;
     }
 }

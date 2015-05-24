@@ -45,9 +45,11 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         // Setup drawer view
         mDrawerLayout.setupDrawerConfiguration((ListView) findViewById(R.id.left_drawer), mToolbar, mDrawerLinearLayout, R.id.content_frame);
+
         // Add nav items
         mDrawerLayout.addNavItem(getString(R.string.title_today), R.drawable.ic_drawer_today_dark, getString(R.string.title_today), WeatherFragment.class);
         mDrawerLayout.addNavItem(getString(R.string.title_forecast), R.drawable.ic_drawer_forecast_dark, getString(R.string.title_forecast), ForecastFragment.class);
+
         // Select default
         if (savedInstanceState == null) {
             mDrawerLayout.selectDrawerItem(0);

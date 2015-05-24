@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeRefreshLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,34 +10,114 @@
         android:id="@+id/container_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:background="@color/global_bg_front">
+        android:background="@color/global_bg_front"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/global_text_primary"
-                android:text="Weather" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/global_text_primary"
-                android:text="Weather" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/global_text_primary"
-                android:text="Weather" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/global_text_primary"
-                android:text="Weather" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/global_spacing_m"
+                android:background="@drawable/overlay_weather_status_today" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/global_text_primary"
+                android:layout_margin="@dimen/global_spacing_xxs"
+                android:textSize="@dimen/global_text_size_subhead"
+                tools:text="Prague"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/global_text_primary"
+                android:textSize="@dimen/global_text_size_display_1"
+                tools:text="25'C | Sunny"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="@dimen/weather_divider_width"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/global_spacing_m"
+                android:layout_marginBottom="@dimen/global_spacing_m"
+                android:background="@color/global_line"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/global_text_primary"
+                    android:drawableTop="@drawable/ic_weather_humidity"
+                    android:textSize="@dimen/global_text_size_subhead"
+                    android:drawablePadding="@dimen/global_spacing_xxs"
+                    tools:text="57%" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/global_text_primary"
+                    android:drawableTop="@drawable/ic_weather_precipitation"
+                    android:textSize="@dimen/global_text_size_subhead"
+                    android:drawablePadding="@dimen/global_spacing_xxs"
+                    tools:text="0.0 mm" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/global_text_primary"
+                    android:drawableTop="@drawable/ic_weather_pressure"
+                    android:textSize="@dimen/global_text_size_subhead"
+                    android:drawablePadding="@dimen/global_spacing_xxs"
+                    tools:text="1019 hPa" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/global_spacing_m"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/global_text_primary"
+                    android:drawableTop="@drawable/ic_weather_wind_speed"
+                    android:textSize="@dimen/global_text_size_subhead"
+                    android:drawablePadding="@dimen/global_spacing_xxs"
+                    tools:text="20 km/h" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/global_text_primary"
+                    android:drawableTop="@drawable/ic_weather_direction"
+                    android:textSize="@dimen/global_text_size_subhead"
+                    android:drawablePadding="@dimen/global_spacing_xxs"
+                    tools:text="SE" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

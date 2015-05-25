@@ -1,4 +1,4 @@
-package com.ondrejruttkay.weather.entity.event;
+package com.ondrejruttkay.weather.event;
 
 import com.ondrejruttkay.weather.client.response.WeatherResponse;
 

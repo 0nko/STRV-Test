@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Rain {
     @SerializedName(value = "3h")
-    private int precipitation;
+    private double precipitation;
 
 
-    public int getPrecipitation() {
+    public double getPrecipitation() {
         return precipitation;
     }
 }

@@ -91,23 +91,26 @@ public class FragmentNavigationDrawer extends DrawerLayout {
      * Swaps fragments in the main content view
      */
     public void selectDrawerItem(int position) {
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         // Create a new fragment and specify the planet to show based on
         // position
         FragmentNavItem navItem = mDrawerNavigationItems.get(position);
-        Fragment fragment = null;
-        try {
-            fragment = navItem.getFragmentClass().newInstance();
-            Bundle args = navItem.getFragmentArgs();
-            if (args != null) {
-                fragment.setArguments(args);
+        Fragment fragment = fragmentManager.findFragmentByTag(navItem.getTitle());
+        if (fragment == null) {
+            try {
+                fragment = navItem.getFragmentClass().newInstance();
+                Bundle args = navItem.getFragmentArgs();
+                if (args != null) {
+                    fragment.setArguments(args);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(drawerContainerRes, fragment).commit();
+        fragmentManager.beginTransaction().replace(drawerContainerRes, fragment, navItem.getTitle()).commit();
 
         // Highlight the selected item, update the mTitle, and close the drawer
         mDrawerList.setItemChecked(position, true);

@@ -7,10 +7,10 @@ import com.ondrejruttkay.weather.WeatherConfig;
 import com.ondrejruttkay.weather.client.request.WeatherApiRequest;
 import com.ondrejruttkay.weather.client.response.ForecastResponse;
 import com.ondrejruttkay.weather.client.response.WeatherResponse;
-import com.ondrejruttkay.weather.entity.event.ForecastError;
-import com.ondrejruttkay.weather.entity.event.ForecastReceivedEvent;
-import com.ondrejruttkay.weather.entity.event.WeatherError;
-import com.ondrejruttkay.weather.entity.event.WeatherReceivedEvent;
+import com.ondrejruttkay.weather.event.ForecastError;
+import com.ondrejruttkay.weather.event.ForecastReceivedEvent;
+import com.ondrejruttkay.weather.event.WeatherError;
+import com.ondrejruttkay.weather.event.WeatherReceivedEvent;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -63,11 +63,11 @@ public class OpenWeatherMapClient {
         }
     };
 
-    public void requestCurrentWeather(String latitude, String longitude) {
+    public void requestCurrentWeather(double latitude, double longitude) {
         weatherApi.getCurrentWeather(latitude, longitude, UNITS, WeatherConfig.API_KEY, weatherCallback);
     }
 
-    public void requestForecast(String latitude, String longitude) {
+    public void requestForecast(double latitude, double longitude) {
         weatherApi.getForecast(latitude, longitude, UNITS, FORECAST_DAYS, WeatherConfig.API_KEY, forecastCallback);
     }
 }

@@ -10,7 +10,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.ondrejruttkay.weather.WeatherApplication;
 import com.ondrejruttkay.weather.activity.MainActivity;
-import com.ondrejruttkay.weather.entity.event.LocationFoundEvent;
+import com.ondrejruttkay.weather.event.LocationFoundEvent;
 import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.PlayServices;
 

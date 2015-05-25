@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.ondrejruttkay.weather.WeatherApplication;
 import com.ondrejruttkay.weather.WeatherConfig;
 import com.ondrejruttkay.weather.fragment.AlertDialogFragment;
 import com.ondrejruttkay.weather.fragment.ForecastFragment;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         // Select default
         if (savedInstanceState == null) {
             mDrawerLayout.selectDrawerItem(0);
+            refreshData();
         }
 
         // register listener

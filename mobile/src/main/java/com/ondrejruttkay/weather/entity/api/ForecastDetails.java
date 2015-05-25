@@ -1,5 +1,7 @@
 package com.ondrejruttkay.weather.entity.api;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -10,14 +12,15 @@ public class ForecastDetails {
     private WeatherData[] weather;
     private Temperature temp;
 
-
-    public Date getDate() {
-        return new Date(dt * 1000);
+    public String getDayOfWeek() {
+        DateFormat format = new SimpleDateFormat("EEEE");
+        String day = format.format(new Date(dt * 1000));
+        return day;
     }
 
 
     public WeatherData getWeatherData() {
-        if (weather != null)
+        if (weather != null && weather.length == 1)
             return weather[0];
         return null;
     }

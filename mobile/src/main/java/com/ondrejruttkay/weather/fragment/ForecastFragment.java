@@ -2,6 +2,7 @@ package com.ondrejruttkay.weather.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +18,7 @@ import com.ondrejruttkay.weather.utility.NetworkManager;
 import com.ondrejruttkay.weather.view.ViewState;
 
 
-public class ForecastFragment extends TaskFragment implements OnLoadDataListener {
+public class ForecastFragment extends Fragment {
     private ViewState mViewState = null;
     private View mRootView;
     private LoadDataTask mLoadDataTask;
@@ -32,8 +33,6 @@ public class ForecastFragment extends TaskFragment implements OnLoadDataListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
         setRetainInstance(true);
     }
 
@@ -43,7 +42,7 @@ public class ForecastFragment extends TaskFragment implements OnLoadDataListener
         mRootView = inflater.inflate(R.layout.fragment_main_forecast, container, false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_accent);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_primary);
 
         showContent();
         return mRootView;
@@ -142,34 +141,13 @@ public class ForecastFragment extends TaskFragment implements OnLoadDataListener
     }
 
 
-    @Override
-    public void onLoadData() {
-        runTaskCallback(new Runnable() {
-            public void run() {
-                if (mRootView == null) return; // view was destroyed
-
-                // get data
-//                mProduct = new ProductEntity();
-//                mProduct.setName("Test Product");
-
-                // hide progress and render view
-//                if (mProduct != null) {
-//                    renderView();
-//                    showContent();
-//                } else showEmpty();
-            }
-        });
-    }
-
-
     private void loadData() {
         if (NetworkManager.isOnline(getActivity())) {
             // show progress
             showProgress();
 
             // run async task
-            mLoadDataTask = new LoadDataTask(this);
-            executeTask(mLoadDataTask);
+
         } else {
             showOffline();
         }
@@ -237,6 +215,6 @@ public class ForecastFragment extends TaskFragment implements OnLoadDataListener
 //        TextView nameTextView = (TextView) mRootView.findViewById(R.id.fragment_simple_name);
 
         // content
-//        nameTextView.setText(mProduct.getName());
+//        nameTextView.setText(mProduct.getCityName());
     }
 }

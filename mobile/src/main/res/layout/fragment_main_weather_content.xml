@@ -10,7 +10,6 @@
         android:id="@+id/container_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/global_bg_front"
         android:fillViewport="true">
 
         <LinearLayout
@@ -19,6 +18,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/weather_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -26,6 +26,7 @@
                 android:background="@drawable/overlay_weather_status_today" />
 
             <TextView
+                android:id="@+id/weather_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -35,6 +36,7 @@
                 tools:text="Prague"/>
 
             <TextView
+                android:id="@+id/weather_summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -57,6 +59,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/weather_humidity"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -68,6 +71,7 @@
                     tools:text="57%" />
 
                 <TextView
+                    android:id="@+id/weather_precipitation"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -79,6 +83,7 @@
                     tools:text="0.0 mm" />
 
                 <TextView
+                    android:id="@+id/weather_pressure"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -97,6 +102,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/weather_wind_speed"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -108,6 +114,7 @@
                     tools:text="20 km/h" />
 
                 <TextView
+                    android:id="@+id/weather_wind_direction"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"

@@ -27,13 +27,15 @@ public class WeatherResponse {
     private Rain rain;
     private Clouds clouds;
 
-    public String getName() {
+    public String getCityName() {
         return name;
     }
 
 
-    public WeatherData[] getWeather() {
-        return weather;
+    public WeatherData getWeatherData() {
+        if (weather != null && weather.length == 1)
+            return weather[0];
+        return null;
     }
 
 

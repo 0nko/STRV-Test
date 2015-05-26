@@ -27,6 +27,13 @@ public class WeatherResponse {
     private Rain rain;
     private Clouds clouds;
 
+    public WeatherResponse() {
+        main = new WeatherDetails();
+        wind = new Wind();
+        rain = new Rain();
+        clouds = new Clouds();
+    }
+
     public String getCityName() {
         return name;
     }
@@ -35,7 +42,7 @@ public class WeatherResponse {
     public WeatherData getWeatherData() {
         if (weather != null && weather.length == 1)
             return weather[0];
-        return null;
+        return new WeatherData();
     }
 
 

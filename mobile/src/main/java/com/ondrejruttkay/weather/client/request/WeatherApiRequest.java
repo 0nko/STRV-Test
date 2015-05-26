@@ -18,7 +18,7 @@ public interface WeatherApiRequest {
                            @Query("APPID") String apiKey,
                            Callback<WeatherResponse> callback);
 
-    @POST("/data/2.5/forecast")
+    @POST("/data/2.5/forecast/daily")
     void getForecast(@Query("lat") double latitude,
                      @Query("lon") double longitude,
                      @Query("units") String units,

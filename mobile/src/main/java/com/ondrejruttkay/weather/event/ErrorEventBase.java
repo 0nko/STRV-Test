@@ -9,15 +9,16 @@ public abstract class ErrorEventBase {
 
     protected ErrorEventBase(String message, boolean isNetworkError) {
         mMessage = message;
+        mIsNetworkError = isNetworkError;
     }
 
 
-    protected String getMessage() {
+    public String getMessage() {
         return mMessage;
     }
 
 
-    protected boolean isNetworkError() {
+    public boolean isNetworkError() {
         return mIsNetworkError;
     }
 }

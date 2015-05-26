@@ -27,4 +27,5 @@
 	<string name="title_about">About</string>
 	<string name="about_message">This is Android test project made by Ondrej Ruttkay.</string>
 	<string name="OK">OK</string>
+	<string name="error_location_not_found">"Location not found"</string>
 </resources>

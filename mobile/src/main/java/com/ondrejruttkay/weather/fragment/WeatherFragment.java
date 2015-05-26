@@ -1,7 +1,6 @@
 package com.ondrejruttkay.weather.fragment;
 
 import android.app.Activity;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,20 +9,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ondrejruttkay.weather.R;
 import com.ondrejruttkay.weather.WeatherApplication;
+import com.ondrejruttkay.weather.client.request.WeatherApiRequest;
 import com.ondrejruttkay.weather.client.response.WeatherResponse;
+import com.ondrejruttkay.weather.event.LocationError;
 import com.ondrejruttkay.weather.event.LocationFoundEvent;
+import com.ondrejruttkay.weather.event.SettingsChangedEvent;
+import com.ondrejruttkay.weather.event.WeatherError;
 import com.ondrejruttkay.weather.event.WeatherReceivedEvent;
+import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.NetworkManager;
+import com.ondrejruttkay.weather.utility.Units;
 import com.ondrejruttkay.weather.view.ViewState;
 import com.squareup.otto.Subscribe;
 
-import java.io.IOException;
-
 
 public class WeatherFragment extends Fragment {
+
+    private static final String PRESSURE_UNITS = " hPa";
+    private static final String HUMIDITY_UNITS = "%";
+
     private ViewState mViewState = null;
     private View mRootView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -44,11 +52,12 @@ public class WeatherFragment extends Fragment {
         super.onAttach(activity);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_main_weather, container, false);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_primary);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -57,32 +66,69 @@ public class WeatherFragment extends Fragment {
             }
         });
 
-        if (mWeatherData != null) {
-            renderView();
-            showContent();
-        }
-
         return mRootView;
     }
 
 
     @Subscribe
     public void onLocationFound(LocationFoundEvent event) {
+        Logcat.d("Weather location received");
+
         Location location = event.getLocation();
         WeatherApplication.getWeatherApiClient().requestCurrentWeather(location.getLatitude(), location.getLongitude());
     }
 
+
     @Subscribe
     public void onWeatherReceived(WeatherReceivedEvent event) {
+        Logcat.d("Weather data received");
+
         mWeatherData = event.getWeather();
         renderView();
         showContent();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+
+    @Subscribe
+    public void onWeatherError(WeatherError error) {
+        showError(error.getMessage());
+    }
+
+
+    @Subscribe
+    public void onLocationError(LocationError error) {
+        showError(error.getMessage());
+    }
+
+
+    @Subscribe
+    public void onSettingsChanged(SettingsChangedEvent event) {
+        if (mViewState == ViewState.CONTENT)
+            renderView();
+    }
+
+
+    private void showError(String message) {
+        showEmpty();
+        mSwipeRefreshLayout.setRefreshing(false);
+
+        if (!message.isEmpty())
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        WeatherApplication.getEventBus().register(this);
 
         // load and show data
         if (mViewState == null || mViewState == ViewState.OFFLINE) {
@@ -96,14 +142,6 @@ public class WeatherFragment extends Fragment {
         } else if (mViewState == ViewState.EMPTY) {
             showEmpty();
         }
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        WeatherApplication.getEventBus().register(this);
     }
 
 
@@ -226,20 +264,21 @@ public class WeatherFragment extends Fragment {
 
 
     private void renderView() {
-        TextView location = (TextView)mRootView.findViewById(R.id.weather_location);
-        TextView weatherSummary = (TextView)mRootView.findViewById(R.id.weather_summary);
-        TextView humidity = (TextView)mRootView.findViewById(R.id.weather_humidity);
-        TextView precipitation = (TextView)mRootView.findViewById(R.id.weather_precipitation);
-        TextView pressure = (TextView)mRootView.findViewById(R.id.weather_pressure);
-        TextView windSpeed = (TextView)mRootView.findViewById(R.id.weather_wind_speed);
-        TextView windDirection = (TextView)mRootView.findViewById(R.id.weather_wind_direction);
+        TextView location = (TextView) mRootView.findViewById(R.id.weather_location);
+        TextView weatherSummary = (TextView) mRootView.findViewById(R.id.weather_summary);
+        TextView humidity = (TextView) mRootView.findViewById(R.id.weather_humidity);
+        TextView precipitation = (TextView) mRootView.findViewById(R.id.weather_precipitation);
+        TextView pressure = (TextView) mRootView.findViewById(R.id.weather_pressure);
+        TextView windSpeed = (TextView) mRootView.findViewById(R.id.weather_wind_speed);
+        TextView windDirection = (TextView) mRootView.findViewById(R.id.weather_wind_direction);
 
         location.setText(mWeatherData.getCityName());
-        weatherSummary.setText(mWeatherData.getWeatherData().getDescription());
-        humidity.setText(mWeatherData.getInfo().getHumidity() + "%");
-        precipitation.setText(mWeatherData.getRain().getPrecipitation() + " mm");
-        pressure.setText(mWeatherData.getInfo().getPressure() + " hPa");
-        windSpeed.setText(mWeatherData.getWind().getSpeed() + " km/h");
+        weatherSummary.setText(Units.getTemperature(mWeatherData.getInfo().getTemperature())
+                + " | " +  mWeatherData.getWeatherData().getDescription());
+        humidity.setText(mWeatherData.getInfo().getHumidity() + HUMIDITY_UNITS);
+        precipitation.setText(Units.getShortDistance(mWeatherData.getRain().getPrecipitation()));
+        pressure.setText(mWeatherData.getInfo().getPressure() + PRESSURE_UNITS);
+        windSpeed.setText(Units.getSpeed(mWeatherData.getWind().getSpeed()));
         windDirection.setText(mWeatherData.getWind().getDirection().name());
     }
 }

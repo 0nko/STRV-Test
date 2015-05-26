@@ -1,28 +1,46 @@
 package com.ondrejruttkay.weather.fragment;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.ondrejruttkay.weather.R;
-import com.ondrejruttkay.weather.listener.OnLoadDataListener;
-import com.ondrejruttkay.weather.task.LoadDataTask;
+import com.ondrejruttkay.weather.WeatherApplication;
+import com.ondrejruttkay.weather.adapter.ForecastListAdapter;
+import com.ondrejruttkay.weather.entity.api.ForecastDetails;
+import com.ondrejruttkay.weather.event.ForecastError;
+import com.ondrejruttkay.weather.event.ForecastReceivedEvent;
+import com.ondrejruttkay.weather.event.LocationError;
+import com.ondrejruttkay.weather.event.LocationFoundEvent;
+import com.ondrejruttkay.weather.event.SettingsChangedEvent;
+import com.ondrejruttkay.weather.utility.Logcat;
 import com.ondrejruttkay.weather.utility.NetworkManager;
 import com.ondrejruttkay.weather.view.ViewState;
+import com.squareup.otto.Subscribe;
 
 
 public class ForecastFragment extends Fragment {
     private ViewState mViewState = null;
     private View mRootView;
-    private LoadDataTask mLoadDataTask;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private ForecastDetails[] mForecastData;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -31,45 +49,93 @@ public class ForecastFragment extends Fragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_main_forecast, container, false);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_primary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
 
-        showContent();
         return mRootView;
+    }
+
+
+    @Subscribe
+    public void onLocationFound(LocationFoundEvent event) {
+        Logcat.d("Forecast location received");
+
+        Location location = event.getLocation();
+        WeatherApplication.getWeatherApiClient().requestForecast(location.getLatitude(), location.getLongitude());
+    }
+
+
+    @Subscribe
+    public void onForecastReceived(ForecastReceivedEvent event) {
+        Logcat.d("Forecast data received");
+
+        mForecastData = event.getForecast().getForecastData();
+        renderView();
+        showContent();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Subscribe
+    public void onWeatherError(ForecastError error) {
+        showError(error.getMessage());
+    }
+
+
+    @Subscribe
+    public void onLocationError(LocationError error) {
+        showError(error.getMessage());
+    }
+
+
+    @Subscribe
+    public void onSettingsChanged(SettingsChangedEvent event) {
+        if (mViewState == ViewState.CONTENT)
+            renderView();
+    }
+
+
+    private void showError(String message) {
+        showEmpty();
+        mSwipeRefreshLayout.setRefreshing(false);
+
+        if (!message.isEmpty())
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        // load and show data
-        if (mViewState == null || mViewState == ViewState.OFFLINE) {
-            loadData();
-        } else if (mViewState == ViewState.CONTENT) {
-//            if (mProduct != null) renderView();
-            showContent();
-        } else if (mViewState == ViewState.PROGRESS) {
-            showProgress();
-        } else if (mViewState == ViewState.EMPTY) {
-            showEmpty();
-        }
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
+
+        WeatherApplication.getEventBus().register(this);
+
+        // load and show data
+        if (mViewState == null || mViewState == ViewState.OFFLINE) {
+            loadData();
+        } else if (mViewState == ViewState.CONTENT) {
+            if (mForecastData != null)
+                renderView();
+            showContent();
+        } else if (mViewState == ViewState.PROGRESS) {
+            showProgress();
+        } else if (mViewState == ViewState.EMPTY) {
+            showEmpty();
+        }
     }
 
 
@@ -90,6 +156,8 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+
+        WeatherApplication.getEventBus().unregister(this);
     }
 
 
@@ -103,9 +171,6 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        // cancel async tasks
-        if (mLoadDataTask != null) mLoadDataTask.cancel(true);
     }
 
 
@@ -123,31 +188,13 @@ public class ForecastFragment extends Fragment {
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // action bar menu
-        super.onCreateOptionsMenu(menu, inflater);
-
-        // TODO
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // action bar menu behaviour
-        return super.onOptionsItemSelected(item);
-
-        // TODO
-    }
-
-
     private void loadData() {
         if (NetworkManager.isOnline(getActivity())) {
             // show progress
-            showProgress();
+            if (!mSwipeRefreshLayout.isRefreshing())
+                showProgress();
 
-            // run async task
-
+            WeatherApplication.getGeolocation().requestFreshLocation();
         } else {
             showOffline();
         }
@@ -155,7 +202,7 @@ public class ForecastFragment extends Fragment {
 
 
     private void showContent() {
-        // show content container
+        // show mContentView container
         ViewGroup containerContent = (ViewGroup) mRootView.findViewById(R.id.container_content);
         ViewGroup containerProgress = (ViewGroup) mRootView.findViewById(R.id.container_progress);
         ViewGroup containerOffline = (ViewGroup) mRootView.findViewById(R.id.container_offline);
@@ -211,10 +258,7 @@ public class ForecastFragment extends Fragment {
 
 
     private void renderView() {
-        // reference
-//        TextView nameTextView = (TextView) mRootView.findViewById(R.id.fragment_simple_name);
-
-        // content
-//        nameTextView.setText(mProduct.getCityName());
+        ListView forecastList = (ListView) mRootView.findViewById(R.id.forecast_list);
+        forecastList.setAdapter(new ForecastListAdapter(getActivity(), mForecastData));
     }
 }

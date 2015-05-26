@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.ondrejruttkay.weather.WeatherApplication;
 import com.ondrejruttkay.weather.WeatherConfig;
+import com.ondrejruttkay.weather.event.SettingsChangedEvent;
 import com.ondrejruttkay.weather.fragment.AlertDialogFragment;
 import com.ondrejruttkay.weather.fragment.ForecastFragment;
 import com.ondrejruttkay.weather.fragment.WeatherFragment;
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         // Select default
         if (savedInstanceState == null) {
             mDrawerLayout.selectDrawerItem(0);
-            refreshData();
         }
 
         // register listener
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     }
 
     private void refreshData() {
+        WeatherApplication.getEventBus().post(new SettingsChangedEvent());
     }
 
 
@@ -87,9 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.prefs_key_user_id))) {
-            mPreferencesChanged = true;
-        }
+        mPreferencesChanged = true;
     }
 
     @Override
@@ -109,13 +108,17 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         mDrawerLayout.syncState();
     }
 
-    /*
-         * Handle results returned to this Activity by other Activities started with
-         * startActivityForResult(). In particular, the method onConnectionFailed() in
-         * LocationUpdateRemover and LocationUpdateRequester may call startResolutionForResult() to
-         * start an Activity that handles Google Play services problems. The result of this
-         * call returns here, to onActivityResult.
-         */
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent.getAction().equals(WeatherConfig.SHOW_PLAY_SERVICES_ERROR_ACTION)) {
+            PlayServices.onConnectionFailed(this);
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 

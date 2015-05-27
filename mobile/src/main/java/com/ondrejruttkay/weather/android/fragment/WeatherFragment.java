@@ -78,7 +78,7 @@ public class WeatherFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        getActivity().setTitle(R.string.title_today);
+        getActivity().setTitle(R.string.fragment_title_today);
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
 
@@ -119,7 +119,6 @@ public class WeatherFragment extends Fragment {
         renderView();
         showContent();
 
-        mSwipeRefreshLayout.setRefreshing(false);
         mIsRefreshing = false;
     }
 
@@ -158,7 +157,6 @@ public class WeatherFragment extends Fragment {
 
     private void showError(String message) {
         showEmpty();
-        mSwipeRefreshLayout.setRefreshing(false);
         mIsRefreshing = false;
 
         if (!message.isEmpty())
@@ -190,7 +188,9 @@ public class WeatherFragment extends Fragment {
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.GONE);
 
+        mSwipeRefreshLayout.setRefreshing(false);
         mSwipeRefreshLayout.setEnabled(true);
+
         mViewState = ViewState.CONTENT;
     }
 
@@ -206,7 +206,9 @@ public class WeatherFragment extends Fragment {
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.GONE);
 
+        mSwipeRefreshLayout.setRefreshing(false);
         mSwipeRefreshLayout.setEnabled(false);
+
         mViewState = ViewState.PROGRESS;
     }
 
@@ -222,7 +224,9 @@ public class WeatherFragment extends Fragment {
         containerOffline.setVisibility(View.VISIBLE);
         containerEmpty.setVisibility(View.GONE);
 
+        mSwipeRefreshLayout.setRefreshing(false);
         mSwipeRefreshLayout.setEnabled(true);
+
         mViewState = ViewState.OFFLINE;
     }
 
@@ -238,7 +242,9 @@ public class WeatherFragment extends Fragment {
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.VISIBLE);
 
+        mSwipeRefreshLayout.setRefreshing(false);
         mSwipeRefreshLayout.setEnabled(true);
+
         mViewState = ViewState.EMPTY;
     }
 
@@ -260,7 +266,7 @@ public class WeatherFragment extends Fragment {
                 + " | " + mWeatherData.getWeatherData().getDescription());
         humidity.setText(mWeatherData.getInfo().getHumidity() + Units.HUMIDITY_UNITS);
         precipitation.setText(Units.getShortDistance(mWeatherData.getRain().getPrecipitation()));
-        pressure.setText(String.format("%f %s", mWeatherData.getInfo().getPressure(), Units.PRESSURE_UNITS));
+        pressure.setText(String.format("%.2f %s", mWeatherData.getInfo().getPressure(), Units.PRESSURE_UNITS));
         windSpeed.setText(Units.getSpeed(mWeatherData.getWind().getSpeed()));
         windDirection.setText(mWeatherData.getWind().getDirection().name());
     }

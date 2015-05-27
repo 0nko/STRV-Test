@@ -19,7 +19,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(R.string.title_settings);
+        mToolbar.setTitle(R.string.activity_title_settings);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setElevation(MainActivity.TOOLBAR_ELEVATION);

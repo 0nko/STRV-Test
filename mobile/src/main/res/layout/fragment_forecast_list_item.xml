@@ -9,14 +9,14 @@
 
     <ImageView
         android:id="@+id/forecast_image"
-        android:layout_width="@dimen/overlay_weather_status_forecast"
-        android:layout_height="@dimen/overlay_weather_status_forecast"
-        android:contentDescription="@string/weather_status_image_content_description"
+        android:layout_width="@dimen/shape_overlay_weather_status_forecast"
+        android:layout_height="@dimen/shape_overlay_weather_status_forecast"
+        android:contentDescription="@string/content_description_weather_status_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/global_spacing_xs"
-        android:background="@drawable/overlay_weather_status"/>
+        android:background="@drawable/shape_overlay_weather_status"/>
 
     <TextView
         android:id="@+id/forecast_day"

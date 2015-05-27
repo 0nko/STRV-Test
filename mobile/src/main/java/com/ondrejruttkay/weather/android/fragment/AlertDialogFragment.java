@@ -32,7 +32,7 @@ public class AlertDialogFragment extends DialogFragment {
         return new android.support.v7.app.AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_OK, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

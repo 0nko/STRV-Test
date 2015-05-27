@@ -77,7 +77,7 @@ public class ForecastFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        getActivity().setTitle(R.string.title_forecast);
+        getActivity().setTitle(R.string.fragment_title_forecast);
     }
 
 

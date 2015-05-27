@@ -32,7 +32,7 @@
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/title_settings">
+            android:label="@string/activity_title_settings">
         </activity>
     </application>
 

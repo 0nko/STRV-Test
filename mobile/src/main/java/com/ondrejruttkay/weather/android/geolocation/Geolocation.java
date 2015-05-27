@@ -117,7 +117,7 @@ public class Geolocation implements LocationListener,
                                 if (lastLocation != null) {
                                     onLocationChanged(lastLocation);
                                 } else {
-                                    WeatherApplication.getEventBus().post(new LocationError(WeatherApplication.getContext().getResources().getString(R.string.error_location_not_found), false));
+                                    WeatherApplication.getEventBus().post(new LocationError(WeatherApplication.getContext().getResources().getString(R.string.global_location_location_not_found_toast), false));
                                     stop();
                                 }
                             }

@@ -50,7 +50,7 @@ public class ForecastListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null || convertView.getTag() == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.forecast_list_item, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_forecast_list_item, null);
             holder = new ViewHolder();
             holder.image = (ImageView) convertView.findViewById(R.id.forecast_image);
             holder.day = (TextView) convertView.findViewById(R.id.forecast_day);

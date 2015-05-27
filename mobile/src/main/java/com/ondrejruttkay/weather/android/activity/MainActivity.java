@@ -180,8 +180,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         mDrawerLayout.setupDrawerConfiguration((ListView) findViewById(R.id.left_drawer), mToolbar, mDrawerLinearLayout, R.id.content_frame);
 
         // Add nav items
-        mDrawerLayout.addNavItem(getString(R.string.title_today), R.drawable.ic_drawer_today_dark, getString(R.string.title_today), WeatherFragment.class);
-        mDrawerLayout.addNavItem(getString(R.string.title_forecast), R.drawable.ic_drawer_forecast_dark, getString(R.string.title_forecast), ForecastFragment.class);
+        mDrawerLayout.addNavItem(getString(R.string.fragment_title_today), R.drawable.ic_drawer_today_dark, getString(R.string.fragment_title_today), WeatherFragment.class);
+        mDrawerLayout.addNavItem(getString(R.string.fragment_title_forecast), R.drawable.ic_drawer_forecast_dark, getString(R.string.fragment_title_forecast), ForecastFragment.class);
 
         // Select default
         if (savedInstanceState == null) {
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
 
     private void showAboutDialog() {
-        AlertDialogFragment aboutDialog = AlertDialogFragment.newInstance(R.string.title_about, R.string.about_message);
+        AlertDialogFragment aboutDialog = AlertDialogFragment.newInstance(R.string.dialog_title_about, R.string.dialog_about_message);
         aboutDialog.show(getSupportFragmentManager(), "dialog");
     }
 

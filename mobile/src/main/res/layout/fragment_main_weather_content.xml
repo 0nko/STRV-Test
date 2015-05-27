@@ -9,12 +9,12 @@
 
         <ImageView
             android:id="@+id/weather_image"
-            android:layout_width="@dimen/overlay_weather_status_today"
-            android:layout_height="@dimen/overlay_weather_status_today"
+            android:layout_width="@dimen/shape_overlay_weather_status_today"
+            android:layout_height="@dimen/shape_overlay_weather_status_today"
             android:layout_gravity="center"
             android:layout_margin="@dimen/global_spacing_m"
-            android:contentDescription="@string/weather_status_image_content_description"
-            android:background="@drawable/overlay_weather_status"/>
+            android:contentDescription="@string/content_description_weather_status_image"
+            android:background="@drawable/shape_overlay_weather_status"/>
 
         <TextView
             android:id="@+id/weather_location"

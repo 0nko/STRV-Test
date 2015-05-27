@@ -88,7 +88,7 @@ android
                                                 if (outputFile != null && outputFile.name.endsWith('.apk')) {
                                                     def fileName = outputFile.name.replace(
                                                             "mobile",
-                                                            "example-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + "-" + date.format('yyyyMMdd'))
+                                                            "weather-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + "-" + date.format('yyyyMMdd'))
                                                     output.outputFile = new File((String) outputFile.parent, (String) fileName)
                                                 }
                                         }
@@ -103,7 +103,7 @@ task askForPasswords <<
             def keyAlias
             def keyPass
 
-            def keystorePropertiesFile = new File(project.property("weather.properties"))
+            def keystorePropertiesFile = new File(project.property("keystore.properties"))
 
             if (project.hasProperty("keystore.properties") && keystorePropertiesFile.exists()) {
                 println "Loading keystore passwords from property file..."

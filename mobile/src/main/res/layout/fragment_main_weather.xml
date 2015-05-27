@@ -1,34 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_refresh_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/global_bg_front"
     android:animateLayoutChanges="true">
 
-    
-    <include layout="@layout/fragment_main_weather_content" />
-
-
-    <include
-        layout="@layout/placeholder_progress"
-        android:id="@+id/container_progress"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:fillViewport="true">
 
-    <include
-        layout="@layout/placeholder_offline"
-        android:id="@+id/container_offline"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/global_bg_front">
 
-    <include
-        layout="@layout/placeholder_empty"
-        android:id="@+id/container_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+            <include
+                layout="@layout/fragment_main_weather_content"
+                android:visibility="visible"/>
 
-</FrameLayout>
+
+            <include
+                android:id="@+id/container_progress"
+                layout="@layout/placeholder_progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <include
+                android:id="@+id/container_offline"
+                layout="@layout/placeholder_offline"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <include
+                android:id="@+id/container_empty"
+                layout="@layout/placeholder_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+
+        </FrameLayout>
+    </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>
+

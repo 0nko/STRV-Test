@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.ondrejruttkay.weather.client.OpenWeatherMapClient;
 import com.ondrejruttkay.weather.geolocation.Geolocation;
+import com.ondrejruttkay.weather.utility.Preferences;
 import com.squareup.otto.Bus;
 
 
@@ -13,6 +14,7 @@ public class WeatherApplication extends Application {
     private static Bus mEventBus;
     private static Geolocation mGeolocation;
     private static OpenWeatherMapClient mApiClient;
+    private static Preferences mPreferences;
 
 
     public WeatherApplication() {
@@ -25,6 +27,7 @@ public class WeatherApplication extends Application {
         super.onCreate();
 
         mEventBus = new Bus();
+        mPreferences = new Preferences(this);
         mGeolocation = new Geolocation();
         mApiClient = new OpenWeatherMapClient();
 
@@ -55,5 +58,10 @@ public class WeatherApplication extends Application {
 
     public static OpenWeatherMapClient getWeatherApiClient() {
         return mApiClient;
+    }
+
+
+    public static Preferences getPreferences() {
+        return mPreferences;
     }
 }

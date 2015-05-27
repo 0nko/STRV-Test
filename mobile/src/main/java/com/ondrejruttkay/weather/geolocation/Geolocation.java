@@ -39,14 +39,12 @@ public class Geolocation implements LocationListener,
         mLocationRequest = LocationRequest.create();
         mGoogleApiClient = new GoogleApiClient.Builder(WeatherApplication.getContext()).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         mTimer = new Timer();
+
+        WeatherApplication.getEventBus().register(this);
     }
 
-    @Produce
-    public LocationFoundEvent produceLocation() {
-        return new LocationFoundEvent(mLastLocation);
-    }
-
-    public void requestFreshLocation() {
+    public void requestLocation() {
+        // check if we have recent location available
         if (mLastLocation != null) {
             if (mLastLocation.getTime() - new Date().getTime() < ACCEPTABLE_LOCATION_AGE)
                 onLocationChanged(mLastLocation);
@@ -61,8 +59,6 @@ public class Geolocation implements LocationListener,
         Logcat.d("onConnected");
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-        // Timeout timer
         scheduleTimeout();
     }
 
@@ -76,16 +72,19 @@ public class Geolocation implements LocationListener,
                 new Runnable() {
                     @Override
                     public void run() {
+                        Logcat.d("timeout reached");
                         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                         if (lastLocation != null)  {
                             onLocationChanged(lastLocation);
                         } else {
                             WeatherApplication.getEventBus().post(new LocationError(WeatherApplication.getContext().getResources().getString(R.string.error_location_not_found), false));
+                            stop();
                         }
                     }
                 });
             }
         }, LOCATION_UPDATE_TIMEOUT);
+        Logcat.d("timeout scheduled");
     }
 
 
@@ -96,6 +95,11 @@ public class Geolocation implements LocationListener,
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+    }
+
+
+    public boolean isGettingLocation() {
+        return mGoogleApiClient.isConnected() || mGoogleApiClient.isConnecting();
     }
 
     @Override

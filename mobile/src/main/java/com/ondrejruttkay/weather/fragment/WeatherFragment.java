@@ -8,12 +8,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ondrejruttkay.weather.R;
 import com.ondrejruttkay.weather.WeatherApplication;
-import com.ondrejruttkay.weather.client.request.WeatherApiRequest;
+import com.ondrejruttkay.weather.WeatherConfig;
 import com.ondrejruttkay.weather.client.response.WeatherResponse;
 import com.ondrejruttkay.weather.event.LocationError;
 import com.ondrejruttkay.weather.event.LocationFoundEvent;
@@ -25,6 +26,7 @@ import com.ondrejruttkay.weather.utility.NetworkManager;
 import com.ondrejruttkay.weather.utility.Units;
 import com.ondrejruttkay.weather.view.ViewState;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 
 public class WeatherFragment extends Fragment {
@@ -35,6 +37,7 @@ public class WeatherFragment extends Fragment {
     private ViewState mViewState = null;
     private View mRootView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private boolean mIsRefreshing = false;
 
     private WeatherResponse mWeatherData;
 
@@ -62,9 +65,12 @@ public class WeatherFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mIsRefreshing = true;
                 loadData();
             }
         });
+
+        WeatherApplication.getEventBus().register(this);
 
         return mRootView;
     }
@@ -74,8 +80,11 @@ public class WeatherFragment extends Fragment {
     public void onLocationFound(LocationFoundEvent event) {
         Logcat.d("Weather location received");
 
-        Location location = event.getLocation();
-        WeatherApplication.getWeatherApiClient().requestCurrentWeather(location.getLatitude(), location.getLongitude());
+        // if Geolocation service is obtaining fresh location, wait for it
+        if (!WeatherApplication.getGeolocation().isGettingLocation()) {
+            Location location = event.getLocation();
+            WeatherApplication.getWeatherApiClient().requestCurrentWeather(location.getLatitude(), location.getLongitude());
+        }
     }
 
 
@@ -86,7 +95,9 @@ public class WeatherFragment extends Fragment {
         mWeatherData = event.getWeather();
         renderView();
         showContent();
+
         mSwipeRefreshLayout.setRefreshing(false);
+        mIsRefreshing = false;
     }
 
 
@@ -112,6 +123,7 @@ public class WeatherFragment extends Fragment {
     private void showError(String message) {
         showEmpty();
         mSwipeRefreshLayout.setRefreshing(false);
+        mIsRefreshing = false;
 
         if (!message.isEmpty())
             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -119,16 +131,8 @@ public class WeatherFragment extends Fragment {
 
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-
-    @Override
     public void onStart() {
         super.onStart();
-
-        WeatherApplication.getEventBus().register(this);
 
         // load and show data
         if (mViewState == null || mViewState == ViewState.OFFLINE) {
@@ -150,6 +154,7 @@ public class WeatherFragment extends Fragment {
         super.onResume();
 
         getActivity().setTitle(R.string.title_today);
+        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
 
 
@@ -162,8 +167,6 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-
-        WeatherApplication.getEventBus().unregister(this);
     }
 
 
@@ -171,6 +174,7 @@ public class WeatherFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mRootView = null;
+        WeatherApplication.getEventBus().unregister(this);
     }
 
 
@@ -200,7 +204,7 @@ public class WeatherFragment extends Fragment {
             if (!mSwipeRefreshLayout.isRefreshing())
                 showProgress();
 
-            WeatherApplication.getGeolocation().requestFreshLocation();
+            WeatherApplication.getGeolocation().requestLocation();
         } else {
             showOffline();
         }
@@ -217,6 +221,8 @@ public class WeatherFragment extends Fragment {
         containerProgress.setVisibility(View.GONE);
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setEnabled(true);
         mViewState = ViewState.CONTENT;
     }
 
@@ -231,6 +237,8 @@ public class WeatherFragment extends Fragment {
         containerProgress.setVisibility(View.VISIBLE);
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setEnabled(false);
         mViewState = ViewState.PROGRESS;
     }
 
@@ -245,6 +253,8 @@ public class WeatherFragment extends Fragment {
         containerProgress.setVisibility(View.GONE);
         containerOffline.setVisibility(View.VISIBLE);
         containerEmpty.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setEnabled(true);
         mViewState = ViewState.OFFLINE;
     }
 
@@ -259,6 +269,8 @@ public class WeatherFragment extends Fragment {
         containerProgress.setVisibility(View.GONE);
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.VISIBLE);
+
+        mSwipeRefreshLayout.setEnabled(true);
         mViewState = ViewState.EMPTY;
     }
 
@@ -271,6 +283,9 @@ public class WeatherFragment extends Fragment {
         TextView pressure = (TextView) mRootView.findViewById(R.id.weather_pressure);
         TextView windSpeed = (TextView) mRootView.findViewById(R.id.weather_wind_speed);
         TextView windDirection = (TextView) mRootView.findViewById(R.id.weather_wind_direction);
+        ImageView weatherImage = (ImageView) mRootView.findViewById(R.id.weather_image);
+
+        Picasso.with(getActivity()).load(WeatherConfig.API_IMAGE_URL + mWeatherData.getWeatherData().getIcon() + ".png").into(weatherImage);
 
         location.setText(mWeatherData.getCityName());
         weatherSummary.setText(Units.getTemperature(mWeatherData.getInfo().getTemperature())

@@ -1,132 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/swipe_refresh_layout"
+<LinearLayout
+    android:id="@+id/container_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ScrollView
-        android:id="@+id/container_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        <ImageView
+            android:id="@+id/weather_image"
+            android:layout_width="@dimen/overlay_weather_status_today"
+            android:layout_height="@dimen/overlay_weather_status_today"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/global_spacing_m"
+            android:background="@drawable/overlay_weather_status"/>
+
+        <TextView
+            android:id="@+id/weather_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/global_spacing_xxs"
+            android:gravity="center"
+            android:textColor="@color/global_text_primary"
+            android:textSize="@dimen/global_text_size_title"
+            tools:text="Prague"/>
+
+        <TextView
+            android:id="@+id/weather_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/global_text_primary"
+            android:textSize="@dimen/global_text_size_display_1"
+            android:textStyle="bold"
+            tools:text="25'C | Sunny"/>
+
+        <View
+            android:layout_width="@dimen/weather_divider_width"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/global_spacing_m"
+            android:layout_marginTop="@dimen/global_spacing_m"
+            android:background="@color/global_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/weather_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/global_spacing_m"
-                android:background="@drawable/overlay_weather_status_today" />
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/weather_location"
-                android:layout_width="match_parent"
+                android:id="@+id/weather_humidity"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="@dimen/global_spacing_xxs"
+                android:drawableTop="@drawable/ic_weather_humidity"
                 android:gravity="center"
                 android:textColor="@color/global_text_primary"
-                android:layout_margin="@dimen/global_spacing_xxs"
                 android:textSize="@dimen/global_text_size_subhead"
-                tools:text="Prague"/>
+                tools:text="57%"/>
 
             <TextView
-                android:id="@+id/weather_summary"
-                android:layout_width="match_parent"
+                android:id="@+id/weather_precipitation"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="@dimen/global_spacing_xxs"
+                android:drawableTop="@drawable/ic_weather_precipitation"
                 android:gravity="center"
                 android:textColor="@color/global_text_primary"
-                android:textSize="@dimen/global_text_size_display_1"
-                tools:text="25'C | Sunny"
-                android:textStyle="bold" />
+                android:textSize="@dimen/global_text_size_subhead"
+                tools:text="0.0 mm"/>
 
-            <View
-                android:layout_width="@dimen/weather_divider_width"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/global_spacing_m"
-                android:layout_marginBottom="@dimen/global_spacing_m"
-                android:background="@color/global_line"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/weather_pressure"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/weather_humidity"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/global_text_primary"
-                    android:drawableTop="@drawable/ic_weather_humidity"
-                    android:textSize="@dimen/global_text_size_subhead"
-                    android:drawablePadding="@dimen/global_spacing_xxs"
-                    tools:text="57%" />
-
-                <TextView
-                    android:id="@+id/weather_precipitation"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/global_text_primary"
-                    android:drawableTop="@drawable/ic_weather_precipitation"
-                    android:textSize="@dimen/global_text_size_subhead"
-                    android:drawablePadding="@dimen/global_spacing_xxs"
-                    tools:text="0.0 mm" />
-
-                <TextView
-                    android:id="@+id/weather_pressure"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/global_text_primary"
-                    android:drawableTop="@drawable/ic_weather_pressure"
-                    android:textSize="@dimen/global_text_size_subhead"
-                    android:drawablePadding="@dimen/global_spacing_xxs"
-                    tools:text="1019 hPa" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/global_spacing_m"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/weather_wind_speed"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/global_text_primary"
-                    android:drawableTop="@drawable/ic_weather_wind_speed"
-                    android:textSize="@dimen/global_text_size_subhead"
-                    android:drawablePadding="@dimen/global_spacing_xxs"
-                    tools:text="20 km/h" />
-
-                <TextView
-                    android:id="@+id/weather_wind_direction"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/global_text_primary"
-                    android:drawableTop="@drawable/ic_weather_direction"
-                    android:textSize="@dimen/global_text_size_subhead"
-                    android:drawablePadding="@dimen/global_spacing_xxs"
-                    tools:text="SE" />
-            </LinearLayout>
-
+                android:layout_weight="1"
+                android:drawablePadding="@dimen/global_spacing_xxs"
+                android:drawableTop="@drawable/ic_weather_pressure"
+                android:gravity="center"
+                android:textColor="@color/global_text_primary"
+                android:textSize="@dimen/global_text_size_subhead"
+                tools:text="1019 hPa"/>
         </LinearLayout>
-    </ScrollView>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/global_spacing_m"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/weather_wind_speed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="@dimen/global_spacing_xxs"
+                android:drawableTop="@drawable/ic_weather_wind_speed"
+                android:gravity="center"
+                android:textColor="@color/global_text_primary"
+                android:textSize="@dimen/global_text_size_subhead"
+                tools:text="20 km/h"/>
+
+            <TextView
+                android:id="@+id/weather_wind_direction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="@dimen/global_spacing_xxs"
+                android:drawableTop="@drawable/ic_weather_direction"
+                android:gravity="center"
+                android:textColor="@color/global_text_primary"
+                android:textSize="@dimen/global_text_size_subhead"
+                tools:text="SE"/>
+        </LinearLayout>
+
+    </LinearLayout>

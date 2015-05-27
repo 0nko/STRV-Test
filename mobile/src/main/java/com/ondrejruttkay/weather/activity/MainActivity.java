@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         LinearLayout mDrawerLinearLayout = (LinearLayout)findViewById(R.id.drawerLinearLayout);
 
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setElevation(15);
 
         // Setup drawer view
         mDrawerLayout.setupDrawerConfiguration((ListView) findViewById(R.id.left_drawer), mToolbar, mDrawerLinearLayout, R.id.content_frame);
@@ -74,6 +75,14 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
     private void refreshData() {
         WeatherApplication.getEventBus().post(new SettingsChangedEvent());
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        // remove background to reduce overdraw
+        if (hasFocus)
+            getWindow().setBackgroundDrawable(null);
     }
 
 

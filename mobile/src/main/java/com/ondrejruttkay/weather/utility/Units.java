@@ -2,6 +2,8 @@ package com.ondrejruttkay.weather.utility;
 
 import android.preference.PreferenceManager;
 import com.ondrejruttkay.weather.WeatherApplication;
+import com.ondrejruttkay.weather.entity.LengthUnits;
+import com.ondrejruttkay.weather.entity.TemperatureUnits;
 
 /**
  * Created by Onko on 7/8/13.
@@ -57,8 +59,7 @@ public class Units {
     public static final double FRACTION_TO_PERCENT = 100.0;
 
     public static double getAdjustedLongDistance(double distance) {
-        String lengthUnits = PreferenceManager.getDefaultSharedPreferences(WeatherApplication.getContext()).getString("pref_length_units", "meters");
-        if (lengthUnits.equals("meters")) {
+        if (WeatherApplication.getPreferences().getLengthUnits() == LengthUnits.METRIC) {
             return distance;
         } else {
             return distance * KM_TO_MI;
@@ -66,8 +67,7 @@ public class Units {
     }
 
     public static double getAdjustedShortDistance(double distance) {
-        String lengthUnits = PreferenceManager.getDefaultSharedPreferences(WeatherApplication.getContext()).getString("pref_length_units", "meters");
-        if (lengthUnits.equals("meters")) {
+        if (WeatherApplication.getPreferences().getLengthUnits() == LengthUnits.METRIC) {
             return distance;
         } else {
             return distance * MM_TO_INCH;
@@ -75,8 +75,7 @@ public class Units {
     }
 
     public static String getShortDistance(double distance) {
-        String lengthUnits = PreferenceManager.getDefaultSharedPreferences(WeatherApplication.getContext()).getString("pref_length_units", "meters");
-        if (lengthUnits.equals("meters")) {
+        if (WeatherApplication.getPreferences().getLengthUnits() == LengthUnits.METRIC) {
             return String.format("%.1f %s", distance, SHORT_DISTANCE_METRIC_UNITS);
         } else {
             return String.format("%.1f %s", getAdjustedShortDistance(distance), SHORT_DISTANCE_IMPERIAL_UNITS);
@@ -85,8 +84,7 @@ public class Units {
 
 
     public static String getSpeed(double speed) {
-        String lengthUnits = PreferenceManager.getDefaultSharedPreferences(WeatherApplication.getContext()).getString("pref_length_units", "meters");
-        if (lengthUnits.equals("meters")) {
+        if (WeatherApplication.getPreferences().getLengthUnits() == LengthUnits.METRIC) {
             return String.format("%.1f %s", speed, SPEED_METRIC_UNITS);
         } else {
             return String.format("%.1f %s", getAdjustedLongDistance(speed), SPEED_IMPERIAL_UNITS);
@@ -94,8 +92,7 @@ public class Units {
     }
 
     public static String getTemperature(double temp) {
-        String lengthUnits = PreferenceManager.getDefaultSharedPreferences(WeatherApplication.getContext()).getString("pref_temperature_units", "celsius");
-        if (lengthUnits.equals("celsius")) {
+        if (WeatherApplication.getPreferences().getTemperatureUnits() == TemperatureUnits.METRIC) {
             return String.format("%d%s", Math.round(temp), TEMPERATURE_METRIC_UNITS);
         } else {
             return String.format("%d%s", Math.round(temp * 9.0 / 5.0 + 32), TEMPERATURE_IMPERIAL_UNITS);

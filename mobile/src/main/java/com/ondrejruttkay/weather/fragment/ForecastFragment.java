@@ -8,6 +8,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -61,6 +64,8 @@ public class ForecastFragment extends Fragment {
             }
         });
 
+        WeatherApplication.getEventBus().register(this);
+
         return mRootView;
     }
 
@@ -69,8 +74,11 @@ public class ForecastFragment extends Fragment {
     public void onLocationFound(LocationFoundEvent event) {
         Logcat.d("Forecast location received");
 
-        Location location = event.getLocation();
-        WeatherApplication.getWeatherApiClient().requestForecast(location.getLatitude(), location.getLongitude());
+        // if Geolocation service is obtaining fresh location, wait for it
+        if (!WeatherApplication.getGeolocation().isGettingLocation()) {
+            Location location = event.getLocation();
+            WeatherApplication.getWeatherApiClient().requestForecast(location.getLatitude(), location.getLongitude());
+        }
     }
 
 
@@ -79,6 +87,7 @@ public class ForecastFragment extends Fragment {
         Logcat.d("Forecast data received");
 
         mForecastData = event.getForecast().getForecastData();
+
         renderView();
         showContent();
         mSwipeRefreshLayout.setRefreshing(false);
@@ -122,8 +131,6 @@ public class ForecastFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        WeatherApplication.getEventBus().register(this);
-
         // load and show data
         if (mViewState == null || mViewState == ViewState.OFFLINE) {
             loadData();
@@ -148,16 +155,8 @@ public class ForecastFragment extends Fragment {
 
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-
-    @Override
     public void onStop() {
         super.onStop();
-
-        WeatherApplication.getEventBus().unregister(this);
     }
 
 
@@ -165,18 +164,7 @@ public class ForecastFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mRootView = null;
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        WeatherApplication.getEventBus().unregister(this);
     }
 
 
@@ -194,7 +182,7 @@ public class ForecastFragment extends Fragment {
             if (!mSwipeRefreshLayout.isRefreshing())
                 showProgress();
 
-            WeatherApplication.getGeolocation().requestFreshLocation();
+            WeatherApplication.getGeolocation().requestLocation();
         } else {
             showOffline();
         }
@@ -211,6 +199,8 @@ public class ForecastFragment extends Fragment {
         containerProgress.setVisibility(View.GONE);
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setEnabled(true);
         mViewState = ViewState.CONTENT;
     }
 
@@ -225,6 +215,8 @@ public class ForecastFragment extends Fragment {
         containerProgress.setVisibility(View.VISIBLE);
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setEnabled(false);
         mViewState = ViewState.PROGRESS;
     }
 
@@ -239,6 +231,8 @@ public class ForecastFragment extends Fragment {
         containerProgress.setVisibility(View.GONE);
         containerOffline.setVisibility(View.VISIBLE);
         containerEmpty.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setEnabled(true);
         mViewState = ViewState.OFFLINE;
     }
 
@@ -253,12 +247,20 @@ public class ForecastFragment extends Fragment {
         containerProgress.setVisibility(View.GONE);
         containerOffline.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.VISIBLE);
+
+        mSwipeRefreshLayout.setEnabled(true);
         mViewState = ViewState.EMPTY;
     }
 
 
     private void renderView() {
         ListView forecastList = (ListView) mRootView.findViewById(R.id.forecast_list);
+
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+        animation.setDuration(250);
+        LayoutAnimationController controller = new LayoutAnimationController(animation);
+
+        forecastList.setLayoutAnimation(controller);
         forecastList.setAdapter(new ForecastListAdapter(getActivity(), mForecastData));
     }
 }

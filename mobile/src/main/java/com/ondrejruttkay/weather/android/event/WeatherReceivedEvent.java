@@ -9,6 +9,7 @@ public class WeatherReceivedEvent {
 
     private WeatherResponse mWeather;
 
+
     public WeatherReceivedEvent(WeatherResponse response) {
         mWeather = response;
     }

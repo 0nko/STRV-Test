@@ -1,6 +1,5 @@
 package com.ondrejruttkay.weather.android.fragment;
 
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ondrejruttkay.weather.R;
+import com.ondrejruttkay.weather.android.R;
 import com.ondrejruttkay.weather.android.WeatherApplication;
 import com.ondrejruttkay.weather.android.WeatherConfig;
 import com.ondrejruttkay.weather.android.client.response.WeatherResponse;
@@ -30,15 +29,10 @@ import com.squareup.picasso.Picasso;
 
 
 public class WeatherFragment extends Fragment {
-
-    private static final String PRESSURE_UNITS = " hPa";
-    private static final String HUMIDITY_UNITS = "%";
-
     private ViewState mViewState = null;
     private View mRootView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private boolean mIsRefreshing = false;
-
     private WeatherResponse mWeatherData;
 
 
@@ -51,28 +45,57 @@ public class WeatherFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRootView = inflater.inflate(R.layout.fragment_main_weather, container, false);
+
+        setupSwipeRefresh();
+        WeatherApplication.getEventBus().register(this);
+
+        return mRootView;
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_main_weather, container, false);
+    public void onStart() {
+        super.onStart();
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_primary);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mIsRefreshing = true;
-                loadData();
-            }
-        });
+        // load and show data
+        if (mViewState == null || mViewState == ViewState.OFFLINE) {
+            loadData();
+        } else if (mViewState == ViewState.CONTENT) {
+            if (mWeatherData != null)
+                renderView();
+            showContent();
+        } else if (mViewState == ViewState.PROGRESS) {
+            showProgress();
+        } else if (mViewState == ViewState.EMPTY) {
+            showEmpty();
+        }
+    }
 
-        WeatherApplication.getEventBus().register(this);
 
-        return mRootView;
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(R.string.title_today);
+        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // save current instance state
+        super.onSaveInstanceState(outState);
+        setUserVisibleHint(true);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mRootView = null;
+        WeatherApplication.getEventBus().unregister(this);
     }
 
 
@@ -83,7 +106,7 @@ public class WeatherFragment extends Fragment {
         // if Geolocation service is obtaining fresh location, wait for it
         if (!WeatherApplication.getGeolocation().isGettingLocation()) {
             Location location = event.getLocation();
-            WeatherApplication.getWeatherApiClient().requestCurrentWeather(location.getLatitude(), location.getLongitude());
+            WeatherApplication.getWeatherApiClient().sendWeatherRequest(location.getLatitude(), location.getLongitude());
         }
     }
 
@@ -120,6 +143,19 @@ public class WeatherFragment extends Fragment {
     }
 
 
+    private void setupSwipeRefresh() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_primary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mIsRefreshing = true;
+                loadData();
+            }
+        });
+    }
+
+
     private void showError(String message) {
         showEmpty();
         mSwipeRefreshLayout.setRefreshing(false);
@@ -127,74 +163,6 @@ public class WeatherFragment extends Fragment {
 
         if (!message.isEmpty())
             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // load and show data
-        if (mViewState == null || mViewState == ViewState.OFFLINE) {
-            loadData();
-        } else if (mViewState == ViewState.CONTENT) {
-            if (mWeatherData != null)
-                renderView();
-            showContent();
-        } else if (mViewState == ViewState.PROGRESS) {
-            showProgress();
-        } else if (mViewState == ViewState.EMPTY) {
-            showEmpty();
-        }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        getActivity().setTitle(R.string.title_today);
-        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mRootView = null;
-        WeatherApplication.getEventBus().unregister(this);
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // save current instance state
-        super.onSaveInstanceState(outState);
-        setUserVisibleHint(true);
     }
 
 
@@ -289,10 +257,10 @@ public class WeatherFragment extends Fragment {
 
         location.setText(mWeatherData.getCityName());
         weatherSummary.setText(Units.getTemperature(mWeatherData.getInfo().getTemperature())
-                + " | " +  mWeatherData.getWeatherData().getDescription());
-        humidity.setText(mWeatherData.getInfo().getHumidity() + HUMIDITY_UNITS);
+                + " | " + mWeatherData.getWeatherData().getDescription());
+        humidity.setText(mWeatherData.getInfo().getHumidity() + Units.HUMIDITY_UNITS);
         precipitation.setText(Units.getShortDistance(mWeatherData.getRain().getPrecipitation()));
-        pressure.setText(mWeatherData.getInfo().getPressure() + PRESSURE_UNITS);
+        pressure.setText(String.format("%f %s", mWeatherData.getInfo().getPressure(), Units.PRESSURE_UNITS));
         windSpeed.setText(Units.getSpeed(mWeatherData.getWind().getSpeed()));
         windDirection.setText(mWeatherData.getWind().getDirection().name());
     }

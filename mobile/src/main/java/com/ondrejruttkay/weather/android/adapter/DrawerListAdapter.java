@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.ondrejruttkay.weather.R;
+import com.ondrejruttkay.weather.android.R;
 import com.ondrejruttkay.weather.android.entity.DrawerListItem;
 
 import java.util.List;
@@ -20,6 +20,7 @@ public class DrawerListAdapter extends BaseAdapter {
 
     private List<DrawerListItem> mList;
     private Context mContext;
+
 
     public DrawerListAdapter(Context context, List<DrawerListItem> list) {
         this.mContext = context;
@@ -51,7 +52,7 @@ public class DrawerListAdapter extends BaseAdapter {
         if (convertView == null || convertView.getTag() == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.drawer_list_item, null);
             holder = new ViewHolder();
-            holder.menuItem = (TextView)convertView.findViewById(R.id.menuItem);
+            holder.menuItem = (TextView) convertView.findViewById(R.id.menuItem);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

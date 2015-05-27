@@ -27,12 +27,15 @@ public class WeatherResponse {
     private Rain rain;
     private Clouds clouds;
 
+
     public WeatherResponse() {
+        // initialize objects in case some data is missing
         main = new WeatherDetails();
         wind = new Wind();
         rain = new Rain();
         clouds = new Clouds();
     }
+
 
     public String getCityName() {
         return name;

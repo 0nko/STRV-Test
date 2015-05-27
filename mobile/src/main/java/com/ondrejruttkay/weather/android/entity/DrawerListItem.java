@@ -23,13 +23,13 @@ public class DrawerListItem {
     }
 
 
-    public int getIcon() {
-        return this.mIcon;
+    public void setTitle(String title) {
+        this.mTitle = title;
     }
 
 
-    public void setTitle(String title) {
-        this.mTitle = title;
+    public int getIcon() {
+        return this.mIcon;
     }
 
 

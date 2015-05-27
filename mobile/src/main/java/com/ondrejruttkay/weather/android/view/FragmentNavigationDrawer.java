@@ -20,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.ondrejruttkay.weather.R;
+import com.ondrejruttkay.weather.android.R;
 import com.ondrejruttkay.weather.android.adapter.DrawerListAdapter;
 import com.ondrejruttkay.weather.android.entity.DrawerListItem;
 
@@ -58,17 +58,20 @@ public class FragmentNavigationDrawer extends DrawerLayout {
         mDrawerNavigationItems = new ArrayList<>();
         mDrawerItems = new ArrayList<>();
         mDrawerLinearLayout = drawerLinearLayout;
-
         drawerContainerRes = drawerContainerResId;
+
         // Setup drawer list view
         mDrawerList = drawerListView;
         mToolbar = drawerToolbar;
+
         // Setup item listener
         mDrawerList.setOnItemClickListener(new FragmentDrawerItemListener());
+
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = setupDrawerToggle();
         setDrawerListener(mDrawerToggle);
+
         // Setup action buttons
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -76,10 +79,12 @@ public class FragmentNavigationDrawer extends DrawerLayout {
         mDrawerToggle.syncState();
     }
 
+
     // addNavItem("First", R.mipmap.ic_one, "First Fragment", FirstFragment.class)
     public void addNavItem(String navTitle, int icon, String windowTitle, Class<? extends Fragment> fragmentClass) {
         // adding nav drawer items to array
         mDrawerItems.add(new DrawerListItem(navTitle, icon));
+
         // Set the adapter for the list view
         mDrawerAdapter = new DrawerListAdapter(getActivity(), mDrawerItems);
         mDrawerList.setAdapter(mDrawerAdapter);
@@ -93,6 +98,7 @@ public class FragmentNavigationDrawer extends DrawerLayout {
     public void selectDrawerItem(int position) {
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
         // Create a new fragment and specify the planet to show based on
         // position
         FragmentNavItem navItem = mDrawerNavigationItems.get(position);
@@ -118,8 +124,14 @@ public class FragmentNavigationDrawer extends DrawerLayout {
         closeDrawer(mDrawerLinearLayout);
     }
 
+
     public void syncState() {
         mDrawerToggle.syncState();
+    }
+
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(getActivity(), this, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
 
@@ -134,14 +146,18 @@ public class FragmentNavigationDrawer extends DrawerLayout {
 
 
     private ActionBar getSupportActionBar() {
-        return ((AppCompatActivity)getActivity()).getSupportActionBar();
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
+
+
+    public boolean isDrawerOpen() {
+        return isDrawerOpen(mDrawerList);
     }
 
 
     private void setTitle(CharSequence title) {
         getSupportActionBar().setTitle(title);
     }
-
 
     private class FragmentDrawerItemListener implements ListView.OnItemClickListener {
         @Override
@@ -181,15 +197,5 @@ public class FragmentNavigationDrawer extends DrawerLayout {
         public Bundle getFragmentArgs() {
             return mFragmentArgs;
         }
-    }
-
-
-    private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(getActivity(), this, mToolbar, R.string.drawer_open, R.string.drawer_close);
-    }
-
-
-    public boolean isDrawerOpen() {
-        return isDrawerOpen(mDrawerList);
     }
 }

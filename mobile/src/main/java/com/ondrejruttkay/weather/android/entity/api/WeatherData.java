@@ -7,6 +7,7 @@ public class WeatherData {
     private String description;
     private String icon;
 
+
     public String getDescription() {
         return Character.toUpperCase(description.charAt(0)) + description.substring(1);
     }

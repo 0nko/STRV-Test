@@ -8,6 +8,7 @@ public class WeatherDetails {
     private int humidity;
     private double temp;
 
+
     public double getPressure() {
         return pressure;
     }

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.ondrejruttkay.weather.android.R;
 import com.ondrejruttkay.weather.android.WeatherApplication;
 import com.ondrejruttkay.weather.android.WeatherConfig;
 import com.ondrejruttkay.weather.android.event.SettingsChangedEvent;
@@ -23,66 +24,53 @@ import com.ondrejruttkay.weather.android.fragment.WeatherFragment;
 import com.ondrejruttkay.weather.android.utility.Logcat;
 import com.ondrejruttkay.weather.android.utility.PlayServices;
 import com.ondrejruttkay.weather.android.view.FragmentNavigationDrawer;
-import com.ondrejruttkay.weather.R;
 
 
 public class MainActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
+
+    public static int TOOLBAR_ELEVATION = 15;
+
     private boolean mPreferencesChanged = false;
     private boolean mShowPlayServicesError = false;
 
     private FragmentNavigationDrawer mDrawerLayout;
     private Toolbar mToolbar;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar)findViewById(R.id.toolbar);
-        mDrawerLayout = (FragmentNavigationDrawer)findViewById(R.id.navigation_drawer);
-
-        LinearLayout mDrawerLinearLayout = (LinearLayout)findViewById(R.id.drawerLinearLayout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawerLayout = (FragmentNavigationDrawer) findViewById(R.id.navigation_drawer);
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setElevation(15);
+        getSupportActionBar().setElevation(TOOLBAR_ELEVATION);
 
-        // Setup drawer view
-        mDrawerLayout.setupDrawerConfiguration((ListView) findViewById(R.id.left_drawer), mToolbar, mDrawerLinearLayout, R.id.content_frame);
-
-        // Add nav items
-        mDrawerLayout.addNavItem(getString(R.string.title_today), R.drawable.ic_drawer_today_dark, getString(R.string.title_today), WeatherFragment.class);
-        mDrawerLayout.addNavItem(getString(R.string.title_forecast), R.drawable.ic_drawer_forecast_dark, getString(R.string.title_forecast), ForecastFragment.class);
-
-        // Select default
-        if (savedInstanceState == null) {
-            mDrawerLayout.selectDrawerItem(0);
-        }
+        setupDrawer(savedInstanceState);
 
         // register listener
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
 
-        // preferences have changed so refresh data
-        if (mPreferencesChanged) {
-            refreshData();
-            mPreferencesChanged = false;
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerLayout.syncState();
+    }
+
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        if (mShowPlayServicesError) {
+            mShowPlayServicesError = false;
+            PlayServices.showPlayServicesErrorDialog(this);
         }
-    }
-
-    private void refreshData() {
-        WeatherApplication.getEventBus().post(new SettingsChangedEvent());
-    }
-
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        // remove background to reduce overdraw
-        if (hasFocus)
-            getWindow().setBackgroundDrawable(null);
     }
 
 
@@ -96,35 +84,38 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        // remove background to reduce overdraw
+        if (hasFocus)
+            getWindow().setBackgroundDrawable(null);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                startSettingsActivity();
+                break;
+            case R.id.menu_about:
+                showAboutDialog();
+                break;
+        }
+        return true;
+    }
+
+
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         mPreferencesChanged = true;
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-
-        if (mShowPlayServicesError) {
-            mShowPlayServicesError = false;
-            PlayServices.showPlayServicesErrorDialog(this);
-        }
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerLayout.syncState();
-    }
-
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        if (intent.getAction().equals(WeatherConfig.SHOW_PLAY_SERVICES_ERROR_ACTION)) {
-            PlayServices.onConnectionFailed(this);
-        }
     }
 
 
@@ -159,17 +150,48 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         }
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_settings:
-                startSettingsActivity();
-                break;
-            case R.id.menu_about:
-                showAboutDialog();
-                break;
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent.getAction().equals(WeatherConfig.SHOW_PLAY_SERVICES_ERROR_ACTION)) {
+            PlayServices.onConnectionFailed(this);
         }
-        return true;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // preferences have changed so refresh data
+        if (mPreferencesChanged) {
+            refreshData();
+            mPreferencesChanged = false;
+        }
+    }
+
+
+    private void setupDrawer(Bundle savedInstanceState) {
+        LinearLayout mDrawerLinearLayout = (LinearLayout) findViewById(R.id.drawerLinearLayout);
+
+        // Setup drawer view
+        mDrawerLayout.setupDrawerConfiguration((ListView) findViewById(R.id.left_drawer), mToolbar, mDrawerLinearLayout, R.id.content_frame);
+
+        // Add nav items
+        mDrawerLayout.addNavItem(getString(R.string.title_today), R.drawable.ic_drawer_today_dark, getString(R.string.title_today), WeatherFragment.class);
+        mDrawerLayout.addNavItem(getString(R.string.title_forecast), R.drawable.ic_drawer_forecast_dark, getString(R.string.title_forecast), ForecastFragment.class);
+
+        // Select default
+        if (savedInstanceState == null) {
+            mDrawerLayout.selectDrawerItem(0);
+        }
+    }
+
+
+    private void refreshData() {
+        WeatherApplication.getEventBus().post(new SettingsChangedEvent());
     }
 
 
@@ -182,13 +204,5 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 }

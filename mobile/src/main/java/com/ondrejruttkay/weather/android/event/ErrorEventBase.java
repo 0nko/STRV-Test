@@ -7,6 +7,7 @@ public abstract class ErrorEventBase {
     private String mMessage;
     private boolean mIsNetworkError;
 
+
     protected ErrorEventBase(String message, boolean isNetworkError) {
         mMessage = message;
         mIsNetworkError = isNetworkError;

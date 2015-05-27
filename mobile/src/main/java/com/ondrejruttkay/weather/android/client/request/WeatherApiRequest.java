@@ -12,17 +12,17 @@ import retrofit.http.Query;
  */
 public interface WeatherApiRequest {
     @POST("/data/2.5/weather")
-    void getCurrentWeather(@Query("lat") double latitude,
-                           @Query("lon") double longitude,
-                           @Query("units") String units,
-                           @Query("APPID") String apiKey,
-                           Callback<WeatherResponse> callback);
+    void sendWeatherRequest(@Query("lat") double latitude,
+                            @Query("lon") double longitude,
+                            @Query("units") String units,
+                            @Query("APPID") String apiKey,
+                            Callback<WeatherResponse> callback);
 
     @POST("/data/2.5/forecast/daily")
-    void getForecast(@Query("lat") double latitude,
-                     @Query("lon") double longitude,
-                     @Query("units") String units,
-                     @Query("cnt") int days,
-                     @Query("APPID") String apiKey,
-                     Callback<ForecastResponse> callback);
+    void sendForecastRequest(@Query("lat") double latitude,
+                             @Query("lon") double longitude,
+                             @Query("units") String units,
+                             @Query("cnt") int days,
+                             @Query("APPID") String apiKey,
+                             Callback<ForecastResponse> callback);
 }

@@ -13,6 +13,7 @@
             android:layout_height="@dimen/overlay_weather_status_today"
             android:layout_gravity="center"
             android:layout_margin="@dimen/global_spacing_m"
+            android:contentDescription="@string/weather_status_image_content_description"
             android:background="@drawable/overlay_weather_status"/>
 
         <TextView

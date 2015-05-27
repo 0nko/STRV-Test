@@ -17,6 +17,8 @@ public class Units {
     public static final String LONG_DISTANCE_METRIC_UNITS = "km";
     public static final String TEMPERATURE_METRIC_UNITS = "°C";
     public static final String TEMPERATURE_IMPERIAL_UNITS = "°F";
+    public static final String PRESSURE_UNITS = "hPa";
+    public static final String HUMIDITY_UNITS = "%";
 
     // multiplication factor to convert kilometers to miles
     public static final double KM_TO_MI = 0.621371192;
@@ -57,6 +59,7 @@ public class Units {
     // multiplication factor to convert fraction to percentage points
     public static final double FRACTION_TO_PERCENT = 100.0;
 
+
     public static double getAdjustedLongDistance(double distance) {
         if (WeatherApplication.getPreferences().getLengthUnits() == LengthUnits.METRIC) {
             return distance;
@@ -65,6 +68,7 @@ public class Units {
         }
     }
 
+
     public static double getAdjustedShortDistance(double distance) {
         if (WeatherApplication.getPreferences().getLengthUnits() == LengthUnits.METRIC) {
             return distance;
@@ -72,6 +76,7 @@ public class Units {
             return distance * MM_TO_INCH;
         }
     }
+
 
     public static String getShortDistance(double distance) {
         if (WeatherApplication.getPreferences().getLengthUnits() == LengthUnits.METRIC) {
@@ -89,6 +94,7 @@ public class Units {
             return String.format("%.1f %s", getAdjustedLongDistance(speed), SPEED_IMPERIAL_UNITS);
         }
     }
+
 
     public static String getTemperature(double temp) {
         if (WeatherApplication.getPreferences().getTemperatureUnits() == TemperatureUnits.METRIC) {

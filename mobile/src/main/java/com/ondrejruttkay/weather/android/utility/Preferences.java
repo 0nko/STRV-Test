@@ -14,6 +14,7 @@ public class Preferences {
     private SharedPreferences mSharedPreferences;
     private Context mContext;
 
+
     public Preferences(Context context) {
         if (context == null) context = WeatherApplication.getContext();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -37,19 +38,19 @@ public class Preferences {
     }
 
 
-    public LengthUnits getLengthUnits() {
-        String length = mSharedPreferences.getString("pref_length_units", "0");
-        return LengthUnits.values()[Integer.parseInt(length)];
+    public void setTemperatureUnits(TemperatureUnits units) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("pref_temperature_units", units.ordinal() + "");
+        editor.commit();
     }
 
 
     // SETTERS ////////////////////////////////////////////////////////////////////////////////////
 
 
-    public void setTemperatureUnits(TemperatureUnits units) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString("pref_temperature_units", units.ordinal() + "");
-        editor.commit();
+    public LengthUnits getLengthUnits() {
+        String length = mSharedPreferences.getString("pref_length_units", "0");
+        return LengthUnits.values()[Integer.parseInt(length)];
     }
 
 

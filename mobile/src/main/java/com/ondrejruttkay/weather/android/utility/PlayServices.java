@@ -27,6 +27,7 @@ public class PlayServices {
     private static ConnectionResult mResult;
     private static GoogleApiClient mApiClient;
 
+
     /**
      * Verify that Google Play services is available before making a request.
      *
@@ -44,11 +45,6 @@ public class PlayServices {
             GooglePlayServicesUtil.showErrorDialogFragment(resultCode, activity, WeatherConfig.PLAY_SERVICES_FAILURE_RESOLUTION_REQUEST);
             return false;
         }
-    }
-
-
-    public static boolean isResolvingError() {
-        return mResolvingError;
     }
 
 
@@ -97,7 +93,7 @@ public class PlayServices {
         if (!activity.isFinishing()) {
             mResolvingError = true;
             FragmentManager fm = activity.getSupportFragmentManager();
-            PlayServicesErrorDialog f = (PlayServicesErrorDialog)fm.findFragmentByTag(PLAY_SERVICES_ERROR_DIALOG_TAG);
+            PlayServicesErrorDialog f = (PlayServicesErrorDialog) fm.findFragmentByTag(PLAY_SERVICES_ERROR_DIALOG_TAG);
             if (f == null) {
                 PlayServicesErrorDialog errorDialog = new PlayServicesErrorDialog();
                 errorDialog.show(fm, PLAY_SERVICES_ERROR_DIALOG_TAG);
@@ -111,22 +107,28 @@ public class PlayServices {
     }
 
 
+    public static boolean isResolvingError() {
+        return mResolvingError;
+    }
+
     public static class PlayServicesErrorDialog extends DialogFragment {
 
         public PlayServicesErrorDialog() {
             setRetainInstance(true);
         }
 
-        @Override
-        public void onDismiss(DialogInterface dialog) {
-            mResolvingError = false;
-        }
 
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             setCancelable(false);
             return GooglePlayServicesUtil.getErrorDialog(mResult.getErrorCode(), getActivity(), WeatherConfig.PLAY_SERVICES_FAILURE_RESOLUTION_REQUEST);
+        }
+
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            mResolvingError = false;
         }
     }
 }

@@ -12,6 +12,7 @@ public class ForecastDetails {
     private WeatherData[] weather;
     private Temperature temp;
 
+
     public String getDayOfWeek() {
         DateFormat format = new SimpleDateFormat("EEEE");
         String day = format.format(new Date(dt * 1000));

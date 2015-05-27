@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ondrejruttkay.weather.R;
+import com.ondrejruttkay.weather.android.R;
 import com.ondrejruttkay.weather.android.WeatherConfig;
 import com.ondrejruttkay.weather.android.entity.api.ForecastDetails;
 import com.ondrejruttkay.weather.android.utility.Units;
@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 public class ForecastListAdapter extends BaseAdapter {
     private ForecastDetails[] mData;
     private Context mContext;
+
 
     public ForecastListAdapter(Context context, ForecastDetails[] data) {
         this.mContext = context;
@@ -51,10 +52,10 @@ public class ForecastListAdapter extends BaseAdapter {
         if (convertView == null || convertView.getTag() == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.forecast_list_item, null);
             holder = new ViewHolder();
-            holder.image = (ImageView)convertView.findViewById(R.id.forecast_image);
-            holder.day = (TextView)convertView.findViewById(R.id.forecast_day);
-            holder.temperature = (TextView)convertView.findViewById(R.id.forecast_temperature);
-            holder.description = (TextView)convertView.findViewById(R.id.forecast_description);
+            holder.image = (ImageView) convertView.findViewById(R.id.forecast_image);
+            holder.day = (TextView) convertView.findViewById(R.id.forecast_day);
+            holder.temperature = (TextView) convertView.findViewById(R.id.forecast_temperature);
+            holder.description = (TextView) convertView.findViewById(R.id.forecast_description);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

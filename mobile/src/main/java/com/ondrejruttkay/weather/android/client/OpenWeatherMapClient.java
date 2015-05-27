@@ -25,6 +25,33 @@ public class OpenWeatherMapClient {
 
     private static final String UNITS = "metric";
     private static final int FORECAST_DAYS = 5;
+
+    Callback<WeatherResponse> weatherCallback = new Callback<WeatherResponse>() {
+        @Override
+        public void success(WeatherResponse weatherResponse, Response response) {
+            WeatherApplication.getEventBus().post(new WeatherReceivedEvent(weatherResponse));
+        }
+
+
+        @Override
+        public void failure(RetrofitError retrofitError) {
+            WeatherApplication.getEventBus().post(new WeatherError(retrofitError.getMessage(), retrofitError.isNetworkError()));
+        }
+    };
+
+    Callback<ForecastResponse> forecastCallback = new Callback<ForecastResponse>() {
+        @Override
+        public void success(ForecastResponse forecastResponse, Response response) {
+            WeatherApplication.getEventBus().post(new ForecastReceivedEvent(forecastResponse));
+        }
+
+
+        @Override
+        public void failure(RetrofitError retrofitError) {
+            WeatherApplication.getEventBus().post(new ForecastError(retrofitError.getMessage(), retrofitError.isNetworkError()));
+        }
+    };
+
     private WeatherApiRequest weatherApi;
 
     public OpenWeatherMapClient() {
@@ -39,35 +66,13 @@ public class OpenWeatherMapClient {
         weatherApi = restAdapter.create(WeatherApiRequest.class);
     }
 
-    Callback<WeatherResponse> weatherCallback = new Callback<WeatherResponse>() {
-        @Override
-        public void success(WeatherResponse weatherResponse, Response response) {
-            WeatherApplication.getEventBus().post(new WeatherReceivedEvent(weatherResponse));
-        }
 
-        @Override
-        public void failure(RetrofitError retrofitError) {
-            WeatherApplication.getEventBus().post(new WeatherError(retrofitError.getMessage(), retrofitError.isNetworkError()));
-        }
-    };
-
-    Callback<ForecastResponse> forecastCallback = new Callback<ForecastResponse>() {
-        @Override
-        public void success(ForecastResponse forecastResponse, Response response) {
-            WeatherApplication.getEventBus().post(new ForecastReceivedEvent(forecastResponse));
-        }
-
-        @Override
-        public void failure(RetrofitError retrofitError) {
-            WeatherApplication.getEventBus().post(new ForecastError(retrofitError.getMessage(), retrofitError.isNetworkError()));
-        }
-    };
-
-    public void requestCurrentWeather(double latitude, double longitude) {
-        weatherApi.getCurrentWeather(latitude, longitude, UNITS, WeatherConfig.API_KEY, weatherCallback);
+    public void sendWeatherRequest(double latitude, double longitude) {
+        weatherApi.sendWeatherRequest(latitude, longitude, UNITS, WeatherConfig.API_KEY, weatherCallback);
     }
 
-    public void requestForecast(double latitude, double longitude) {
-        weatherApi.getForecast(latitude, longitude, UNITS, FORECAST_DAYS, WeatherConfig.API_KEY, forecastCallback);
+
+    public void sendForecastRequest(double latitude, double longitude) {
+        weatherApi.sendForecastRequest(latitude, longitude, UNITS, FORECAST_DAYS, WeatherConfig.API_KEY, forecastCallback);
     }
 }

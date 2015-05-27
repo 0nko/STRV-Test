@@ -9,6 +9,7 @@ public class ForecastReceivedEvent {
 
     private ForecastResponse mForecast;
 
+
     public ForecastReceivedEvent(ForecastResponse response) {
         mForecast = response;
     }

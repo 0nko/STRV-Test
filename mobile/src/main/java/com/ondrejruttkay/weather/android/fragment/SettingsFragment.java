@@ -7,25 +7,12 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-import com.ondrejruttkay.weather.R;
+import com.ondrejruttkay.weather.android.R;
 
 /**
  * Created by Onko on 5/23/2015.
  */
 public class SettingsFragment extends PreferenceFragment {
-
-    SharedPreferences prefs;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.prefs);
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        bindPreferenceSummaryToValue(findPreference("pref_temperature_units"));
-        bindPreferenceSummaryToValue(findPreference("pref_length_units"));
-    }
 
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
@@ -52,6 +39,7 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         }
     };
+    private SharedPreferences prefs;
 
 
     private static void bindPreferenceSummaryToValue(Preference preference) {
@@ -64,5 +52,17 @@ public class SettingsFragment extends PreferenceFragment {
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.prefs);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        bindPreferenceSummaryToValue(findPreference("pref_temperature_units"));
+        bindPreferenceSummaryToValue(findPreference("pref_length_units"));
     }
 }

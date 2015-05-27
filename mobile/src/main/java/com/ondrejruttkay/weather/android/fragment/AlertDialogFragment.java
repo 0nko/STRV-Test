@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.ondrejruttkay.weather.R;
+import com.ondrejruttkay.weather.android.R;
 
 /**
  * Created by Onko on 5/23/2015.
@@ -22,15 +22,6 @@ public class AlertDialogFragment extends DialogFragment {
         return frag;
     }
 
-    /*
-        Fixes bug where setRetainInstance(true) did not save the fragment
-     */
-    @Override
-    public void onDestroyView() {
-        if (getDialog() != null && getRetainInstance())
-            getDialog().setDismissMessage(null);
-        super.onDestroyView();
-    }
 
     @NonNull
     @Override
@@ -48,6 +39,17 @@ public class AlertDialogFragment extends DialogFragment {
                     }
                 })
                 .create();
+    }
+
+
+    /*
+        Fixes bug where setRetainInstance(true) did not save the fragment
+     */
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+        super.onDestroyView();
     }
 
 }

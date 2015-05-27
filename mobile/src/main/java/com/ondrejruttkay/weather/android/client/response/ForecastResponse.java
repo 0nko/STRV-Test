@@ -20,9 +20,11 @@ public class ForecastResponse {
     private City city;
     private ForecastDetails[] list;
 
+
     public ForecastResponse() {
         list = new ForecastDetails[0];
     }
+
 
     public City getCity() {
         return city;

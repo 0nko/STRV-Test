@@ -1,6 +1,5 @@
 package com.ondrejruttkay.weather.android.fragment;
 
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ondrejruttkay.weather.R;
+import com.ondrejruttkay.weather.android.R;
 import com.ondrejruttkay.weather.android.WeatherApplication;
 import com.ondrejruttkay.weather.android.adapter.ForecastListAdapter;
 import com.ondrejruttkay.weather.android.entity.api.ForecastDetails;
@@ -33,7 +32,6 @@ public class ForecastFragment extends Fragment {
     private ViewState mViewState = null;
     private View mRootView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private ForecastDetails[] mForecastData;
 
 
@@ -46,84 +44,13 @@ public class ForecastFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_main_forecast, container, false);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_primary);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadData();
-            }
-        });
-
+        setupSwipeRefresh();
         WeatherApplication.getEventBus().register(this);
 
         return mRootView;
-    }
-
-
-    @Subscribe
-    public void onLocationFound(LocationFoundEvent event) {
-        Logcat.d("Forecast location received");
-
-        // if Geolocation service is obtaining fresh location, wait for it
-        if (!WeatherApplication.getGeolocation().isGettingLocation()) {
-            Location location = event.getLocation();
-            WeatherApplication.getWeatherApiClient().requestForecast(location.getLatitude(), location.getLongitude());
-        }
-    }
-
-
-    @Subscribe
-    public void onForecastReceived(ForecastReceivedEvent event) {
-        Logcat.d("Forecast data received");
-
-        mForecastData = event.getForecast().getForecastData();
-
-        renderView();
-        showContent();
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Subscribe
-    public void onWeatherError(ForecastError error) {
-        showError(error.getMessage());
-    }
-
-
-    @Subscribe
-    public void onLocationError(LocationError error) {
-        showError(error.getMessage());
-    }
-
-
-    @Subscribe
-    public void onSettingsChanged(SettingsChangedEvent event) {
-        if (mViewState == ViewState.CONTENT)
-            renderView();
-    }
-
-
-    private void showError(String message) {
-        showEmpty();
-        mSwipeRefreshLayout.setRefreshing(false);
-
-        if (!message.isEmpty())
-            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
 
@@ -155,8 +82,10 @@ public class ForecastFragment extends Fragment {
 
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onSaveInstanceState(Bundle outState) {
+        // save current instance state
+        super.onSaveInstanceState(outState);
+        setUserVisibleHint(true);
     }
 
 
@@ -168,11 +97,67 @@ public class ForecastFragment extends Fragment {
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // save current instance state
-        super.onSaveInstanceState(outState);
-        setUserVisibleHint(true);
+    @Subscribe
+    public void onLocationFound(LocationFoundEvent event) {
+        Logcat.d("Forecast location received");
+
+        // if Geolocation service is obtaining fresh location, wait for it
+        if (!WeatherApplication.getGeolocation().isGettingLocation()) {
+            Location location = event.getLocation();
+            WeatherApplication.getWeatherApiClient().sendForecastRequest(location.getLatitude(), location.getLongitude());
+        }
+    }
+
+
+    @Subscribe
+    public void onForecastReceived(ForecastReceivedEvent event) {
+        Logcat.d("Forecast data received");
+
+        mForecastData = event.getForecast().getForecastData();
+
+        renderView();
+        showContent();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+
+    @Subscribe
+    public void onWeatherError(ForecastError error) {
+        showError(error.getMessage());
+    }
+
+
+    @Subscribe
+    public void onLocationError(LocationError error) {
+        showError(error.getMessage());
+    }
+
+
+    @Subscribe
+    public void onSettingsChanged(SettingsChangedEvent event) {
+        if (mViewState == ViewState.CONTENT)
+            renderView();
+    }
+
+
+    private void setupSwipeRefresh() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.global_color_primary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
+    }
+
+
+    private void showError(String message) {
+        showEmpty();
+        mSwipeRefreshLayout.setRefreshing(false);
+
+        if (!message.isEmpty())
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
 

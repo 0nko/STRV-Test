@@ -1,8 +1,6 @@
 package com.ondrejruttkay.weather.android;
 
 
-import com.ondrejruttkay.weather.BuildConfig;
-
 public class WeatherConfig {
     public static final boolean LOGS = BuildConfig.LOGS;
     public static final boolean DEV_API = BuildConfig.DEV_API;
@@ -12,8 +10,8 @@ public class WeatherConfig {
     public static final String API_IMAGE_URL = "http://openweathermap.org/img/w/";
     public static final String API_KEY = "63d03d4b0e37a033b9e66906efbb9334";
 
-    public static String SHOW_PLAY_SERVICES_ERROR_ACTION = "com.ondrejruttkay.weather.SHOW_PLAY_SERVICES_ERROR_ACTION";
-
     // Result request codes
     public final static int PLAY_SERVICES_FAILURE_RESOLUTION_REQUEST = 1001;
+
+    public static String SHOW_PLAY_SERVICES_ERROR_ACTION = "com.ondrejruttkay.weather.SHOW_PLAY_SERVICES_ERROR_ACTION";
 }

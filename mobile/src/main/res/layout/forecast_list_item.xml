@@ -3,19 +3,20 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/global_spacing_xs"
-                android:layout_marginTop="@dimen/global_spacing_xs"
+                android:layout_marginBottom="@dimen/global_spacing_s"
+                android:layout_marginTop="@dimen/global_spacing_s"
                 android:orientation="vertical">
 
     <ImageView
         android:id="@+id/forecast_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/overlay_weather_status_forecast"
+        android:layout_height="@dimen/overlay_weather_status_forecast"
+        android:contentDescription="@string/weather_status_image_content_description"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/global_spacing_xs"
-        android:background="@drawable/overlay_weather_status_forecast"/>
+        android:background="@drawable/overlay_weather_status"/>
 
     <TextView
         android:id="@+id/forecast_day"
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/global_spacing_xxs"
         android:layout_marginStart="@dimen/global_spacing_xxs"
+        android:layout_marginTop="@dimen/global_spacing_xxs"
         android:layout_toEndOf="@id/forecast_image"
         android:layout_toRightOf="@id/forecast_image"
         android:textSize="@dimen/global_text_size_forecast_list"

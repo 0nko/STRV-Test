@@ -25,8 +25,11 @@
 	<dimen name="global_text_size_button">14sp</dimen>
 	<dimen name="global_text_size_menu">16sp</dimen>
 	<dimen name="global_text_size_drawer_list">18sp</dimen>
-	<dimen name="global_text_size_forecast_list">40sp</dimen>
+	<dimen name="global_text_size_forecast_list">30sp</dimen>
 
     <dimen name="drawer_width">240dp</dimen>
     <dimen name="weather_divider_width">100dp</dimen>
+
+	<dimen name="overlay_weather_status_forecast">65dp</dimen>
+	<dimen name="overlay_weather_status_today">90dp</dimen>
 </resources>
